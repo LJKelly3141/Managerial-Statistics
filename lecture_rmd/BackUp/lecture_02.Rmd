@@ -1,0 +1,351 @@
+---
+knit: (function(inputFile, encoding) {
+    rmarkdown::render(inputFile, encoding = encoding, output_dir = "../docs/")
+  })
+output: 
+  html_document:
+    output: html_notebook
+    css: style.css
+    code_folding: show
+institute: "University of Wisconsin-River Falls"
+department: "College of Business and Economics"
+short-author: "Kelly"
+short-date: ''
+short-institute: "UWRF"
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+# 1. The $\chi^2$ Goodness-of-fit Test
+
+A dice is rolled as follows:
+
+|  1  |  2  |  3  |  4  |  5  |  6  |
+|:---:|:---:|:---:|:---:|:---:|:---:|
+| 55  | 31  | 37  | 47  | 48  | 32  |
+
+Use the $\chi^2$ goodness of fit test to determine if the dice is fair to a 95% confidence level.
+
+## 1.A Calculate $\chi^2$ goodness of fit test "by hand"
+
+-   **Step 1:** Enter observed frequencies into a vector named `observed`
+
+    ```{r}
+    observed <- c(
+      "1" = 55,
+      "2" = 31,
+      "3" = 37,
+      "4" = 47,
+      "5" = 48,
+      "6" = 32
+    )
+    ```
+
+-   **Step 2:** Save the number of trials in a variable named `N`
+
+    ```{r}
+      N <- sum(observed)
+    ```
+
+-   **Step 3:** Save the degrees of freedom in a variable named `degrees.freedom`
+
+    ```{r}
+    degrees.freedom <- length(observed) - 1
+    ```
+
+-   **Step 4:** Save the probabilities of each outcome in a variable named `probabilities`
+
+    ```{r}
+    probabilities <- rep(1 / length(observed), length(observed))
+    ```
+
+-   **Step 5:** Save the expected value of each outcome in a variable named `expected`
+
+    ```{r}
+    expected <- N * probabilities
+    ```
+
+-   **Step 6:** Save the test statistic in a variable named `chisq.stat`
+
+    ```{r}
+    chisq.stat <- sum((observed - expected) ^ 2 / expected)
+    ```
+
+-   **Step 7:** Save the p-value in a variable named `chisq.pvalue`
+
+    ```{r}
+    chisq.pvalue <- pchisq(q = chisq.stat, 
+                           df = degrees.freedom, 
+                           lower.tail = FALSE)
+    ```
+
+-   **Step 8:** Save both `chisq.stat` and `chisq.pvalue` in a vector named `chisqr`. Print `chisqr`
+
+    ```{r}
+    chisqr <- c("chisq stat" = chisq.stat,
+                "chisq pvalue" = chisq.pvalue)
+    chisqr
+    ```
+
+## 1.B Use the chisq.test() function to repeat the chi squared test.
+
+```{r}
+built.in.chisq <- chisq.test(x = observed, p = probabilities)
+built.in.chisq
+```
+
+## 1.C What about two dice?
+
+### We need the expected probabilities of roiling 1 to 12:
+
+| **ROLL A...** | **PROBABILITY** |
+|:--------------|:----------------|
+| 2             | 1/36 (2.778%)   |
+| 3             | 2/36 (5.556%)   |
+| 4             | 3/36 (8.333%)   |
+| 5             | 4/36 (11.111%)  |
+| 6             | 5/36 (13.889%)  |
+| 7             | 6/36 (16.667%)  |
+| 8             | 5/36 (13.889%)  |
+| 9             | 4/36 (11.111%)  |
+| 10            | 3/36 (8.333%)   |
+| 11            | 2/36 (5.556%)   |
+| 12            | 1/36 (2.778%)   |
+
+```{r}
+probabilities <- c(1,2,3,4,5,6,5,4,3,2,1)
+probabilities <- probabilities/sum(probabilities)
+probabilities
+```
+
+### Now lets roll some dice:
+
+```{r}
+n.dice <- 2
+n.sides <- 6
+rep <- 100
+
+my.dice.sum <- function(n.dice, n.sides){
+  dice <- sample(1:n.sides, size = n.dice, replace = TRUE)
+  return(sum(dice))
+}
+observed <- replicate(rep, my.dice.sum(n.dice, n.sides))
+
+observed <- table(cut(observed, 2:13, right=FALSE))
+observed
+```
+
+### Now run the test:
+
+```{r}
+built.in.chisq <- chisq.test(x = observed, p = probabilities)
+built.in.chisq
+```
+
+### Now let's see if the distribution is the same for three dice:
+
+```{r}
+n.dice <- 3
+n.sides <- 6
+rep <- 100
+
+observed <- replicate(rep, my.dice.sum(n.dice, n.sides))
+observed <- table(cut(observed, 2:13, right=FALSE))
+
+built.in.chisq <- chisq.test(x = observed, p = probabilities)
+built.in.chisq
+```
+
+# 2. The $\chi^2$ Test of Independence (or Association)
+
+Are hair color and body type independent? The table below shows the results of a researcher's observations of randomly selected people.
+
+|                   | Blonde | Brunette | Red |
+|:------------------|:-------|:---------|:----|
+| Short and Slender | 53     | 127      | 31  |
+| Short and Pudgy   | 62     | 134      | 36  |
+| Tall and Slender  | 71     | 118      | 40  |
+| Tall and Heavy    | 46     | 100      | 42  |
+
+Use the $\chi^2$ test for independence to determine if there is a significant (95% confidence level) relationship between body type and hair color. Use the following steps:
+
+-   **Step 1.** Load the data. We need to use the `matrix()` function to input the data. Name the matrix `HairByType`. Here is an example of how to do this:
+
+    ```{r}
+
+    HairByType <- matrix(c(53,127,31,62,134,36,71,118,40,46,100,42),
+                         ncol = 3,
+                         byrow = TRUE) 
+
+    rownames(HairByType) <- c("Short and Slender","Short and Pudgy","Tall and Slender","Tall and Heavy")
+
+    colnames(HairByType) <- c("Blonde","Brunette","Red")
+
+    HairByType
+    ```
+
+-   **Step 2.** Run the test. Store the results in `Test.Stat`. Example code: `Test.Stat <- chisq.test(HairByType)`
+
+    ```{r}
+    Test.Stat <- chisq.test(HairByType)
+    Test.Stat
+    ```
+
+## Let't try a more realistic example
+
+-   Convert the `HairByType` to raw data
+
+    ```{r}
+    library(tidyverse)
+    Hair.BodyType <- as.data.frame(HairByType) %>% 
+      rownames_to_column("Body Type") %>% 
+      pivot_longer(-`Body Type`,names_to = "Hair Type") %>% 
+      uncount(value)
+    head(Hair.BodyType)
+    ```
+
+-   Use the raw data to conduct the $\chi^2$ test for independence. To use the `chisqr.test()` function, the data need to be processed using the `table()` function.
+
+    ```{r}
+    HairBody.Table <- table(Hair.BodyType)
+    HairBody.Table
+    ```
+
+-   Now, conduct the test.
+
+    ```{r}
+    Test.Stat <- chisq.test(HairBody.Table)
+    Test.Stat
+    ```
+
+# 3. Corrections and Assumptions
+
+## 3.A The Continuity Correction
+
+-   The Yeats Correction
+
+    ```{r}
+    Test.Stat <- chisq.test(HairBody.Table, correct = TRUE)
+    Test.Stat
+
+    Test.Stat <- chisq.test(HairBody.Table, correct = FALSE)
+    Test.Stat
+    ```
+
+-   An example with a 2 x 2 contingency table: Subset of Hair
+
+    ```{r}
+    Hair.Table <- Hair.BodyType %>% 
+      filter(`Hair Type` != "Red" & str_detect(`Body Type`, "Tall")) %>% 
+      table()
+    Hair.Table
+    
+    Test.Stat <- chisq.test(Hair.Table, correct = TRUE)
+    Test.Stat
+
+    Test.Stat <- chisq.test(Hair.Table, correct = FALSE)
+    Test.Stat
+    ```
+
+## 3.B Effect Size
+
+- Calculate Cramer's V
+
+  ```{r}
+  HairBody.chisq <- chisq.test(HairBody.Table)
+
+  chisq <- HairBody.chisq$statistic
+  N <- sum(HairBody.chisq$observed)
+  k <- min(nrow(HairBody.chisq$observed),ncol(HairBody.chisq$observed))
+  V <- as.vector(sqrt(chisq/(N*(k-1))))
+  V
+  ```
+
+- Just for fun...Let's make a function
+
+  ```{r}
+  cramersV <- function(cs.test){
+    chisq <- cs.test$statistic
+    N <- sum(cs.test$observed)
+    k <- min(nrow(cs.test$observed),ncol(cs.test$observed))
+    return(as.vector(sqrt(chisq/(N*(k-1)))))
+  }
+  
+  cramersV(HairBody.chisq)
+  ```
+
+
+## 3.C Assumptions of the Test(s)
+
+- Expected frequencies are sufficiently large. 
+- Data are independent of one another.
+
+# 4. The $\chi^2$ Test in Practice
+
+## 4.A Goodness of Fit Test from Raw Data
+
+This section follows the example presented in LSR: 12.1.1
+
+```{r}
+# Load the data
+load(
+  url("https://ljkelly3141.github.io/ABE/data/randomness.Rdata")
+  )
+head(cards)
+
+# Tabulate the observed table
+observed <- table(cards$choice_1)
+observed
+
+# Run the test
+Test.Stat <- chisq.test(observed) 
+Test.Stat
+```
+
+## 4.B Fisher Exact Test 
+
+This section follows the example presented in LSR: 12.7
+
+```{r}
+# Load the data
+load(
+  url("https://ljkelly3141.github.io/ABE/data/salem.Rdata")
+  )
+head(trial)
+
+# Tabulate the observed table
+salem.tabs <- table(trial)
+salem.tabs
+
+# Run the test chi squared test. Note that you are warned that the sample is too small.
+chisq.stat <- chisq.test(salem.tabs) 
+chisq.stat
+
+# Run Fisher Exact Test 
+fisher.stat <- fisher.test(salem.tabs)
+fisher.stat
+```
+
+## 4.C The McNemar Test
+
+This section follows the example presented in LSR: 12.8
+
+```{r}
+# Load data
+load(
+  url("https://ljkelly3141.github.io/ABE/data/agpp.Rdata")
+)
+head(agpp)
+summary(agpp) 
+
+# Tabulate the contingency table
+right.table <- xtabs( ~ response_before + response_after, data = agpp)
+right.table
+
+# Conduct the test
+Test.Stat <- mcnemar.test(right.table)
+Test.Stat
+```
+

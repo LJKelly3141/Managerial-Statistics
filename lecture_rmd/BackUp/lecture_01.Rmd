@@ -1,0 +1,205 @@
+---
+knit: (function(inputFile, encoding) {
+    rmarkdown::render(inputFile, encoding = encoding, output_dir = "../docs/")
+  })
+output: 
+  html_document:
+    output: html_notebook
+    css: style.css
+    code_folding: show
+institute: "University of Wisconsin-River Falls"
+department: "College of Business and Economics"
+short-author: "Kelly"
+short-date: ''
+short-institute: "UWRF"
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+if(!require(devtools)) {
+  install.packages("devtools")
+}
+if(!require(tutorial)) {
+  devtools::install_github("datacamp/tutorial")
+  library(tutorial)
+}
+
+tutorial::go_interactive(greedy = F, height = 600)
+```
+
+# 1. RStudio
+
+
+# 2. RMarkdown
+
+We can divide the content into three categories:
+
+1.  The **YAML header** at the top with the title, author, date, and output information (separated by
+2.  the **code chunks** separated by \`\`\` which can be run by clicking the green play button on the side
+3.  **text**, such as this.
+
+## 2.A Setup code chunk:
+
+```{r setup, echo=TRUE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
+## 2.B Code chunks
+
+```{r}
+library(tidyverse)
+library(knitr)
+
+mtcars <- mtcars
+
+plot(mtcars)
+```
+
+## 2.C Text
+
+An excellent resource for R Markdown, for which this tutorial takes partial influence from, is Chapter 27 of the book "R for Data Science" by Hadley Wickham and Garrett Grolemund.
+
+## 2.D Links
+
+Additionally, we will be referencing the cheat sheet for R Markdown, which can be located here: [Chreet Sheet](https://rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf){.uri}
+
+Text in an R Markdown document can utilize markdown syntax. At first, you might have to rely fairly heavily on the cheat sheet along with some trial and error, but you will get used to it fairly often. Here are some examples:
+
+-   **bold text** and **bold text**
+
+-   *italics text* and *italics text*
+
+-   superscript^2^
+
+-   subscript~0~
+
+-   ~~strikethrough~~
+
+-   embedded links such as [link](www.rstudio.com)
+
+You can create white space with this character:
+
+<br>
+
+You can create a block quote like this:
+
+> block quote
+
+and you can create a faint horizontal rule this way:
+
+------------------------------------------------------------------------
+
+## 2.E Headings
+
+Next, you can create headers - this is common when you want to separate your document into multiple sections.
+
+# Biggest header
+
+## Second biggest header
+
+### Third biggest header
+
+#### Fourth biggest header
+
+##### Fifth biggest header
+
+###### Smallest header
+
+## 2.F Math
+
+We can embed equations inline in the following way: $E = m * c^{2}$
+
+## 2.G Inline Code
+
+The mean is `r mean(mtcars$hp)`. As mentioned earlier, a new R chunk can be created by enclosing code by a pair of \`\`\`.
+
+## 2.H Lists
+
+A list can be created like this:
+
+-   unordered list
+
+-   item 2
+
+    -   sub-item 1
+    -   sub-item 2
+
+1.  ordered list
+2.  item 2
+
+-   sub-item 1
+-   sub-item 2
+
+## 2.I Tables
+
+A table can be created like this:
+
+| First Header | Second Header |
+|--------------|---------------|
+| Content Cell | Content Cell  |
+| Content Cell | Content Cell  |
+
+However, creating tables from R data gets particularly interesting. Consider these two for instance:
+
+```{r}
+head(mtcars)
+```
+
+```{r}
+kable(head(mtcars))
+```
+
+## 2.J Cheat sheet
+
+[Cheat sheet for R Markdown](https://www.youtube.com/redirect?event=video_description&redir_token=QUFFLUhqbEM3YUNoeENQV0x1OHZFNV9rTHNCWC1IRk01QXxBQ3Jtc0ttMnZnRmhNWGhpMFdhUDlQbnVuX01SR0RJUzZwb3lZdnlmVXNRaHB3M3Y2c2oyQmZIWTRXTGJfSTJaRkhVNm5Jbk1OZzRIMHVGR1BwNFJydzBSVHRfUGhINUlCWEZzQ3FKVy1iTUFwVzh5NlY4Szk4UQ&q=https%3A%2F%2Frstudio.com%2Fwp-content%2Fuploads%2F2015%2F02%2Frmarkdown-cheatsheet.pdf)
+
+## 2.K Data Frames and Other Variables
+
+```{r}
+
+cool.data <- data.frame(
+  age = c(17, 19, 21, 37, 18, 19, 47, 18, 19),
+  score = c(12, 10, 11, 15, 16, 14, 25, 21, 29),
+  sex = c(1, 1, 1, 1, 1, 2, 2, 2, 2)
+)
+
+cool.data
+```
+
+```{r}
+# The second and is also acceptable:
+age <- c(17, 19, 21, 37, 18, 19, 47, 18, 19)
+score <- c(12, 10, 11, 15, 16, 14, 25, 21, 29)
+sex <- c(1, 1, 1, 1, 1, 2, 2, 2, 2)
+
+cool.data <- data.frame(age, score, sex)
+
+cool.data
+```
+
+```{r}
+# Question 2: use the functions as.factor() and levels()
+
+cool.data$sex <- as.factor(cool.data$sex)
+
+levels(cool.data$sex) <- c("male","female")
+
+cool.data
+```
+
+```{r}
+boxplot(score~sex, data=cool.data)
+```
+
+```{r}
+library(psych)
+
+describe(cool.data,
+         skew = F,
+         ranges = F)
+```
+
+```{r}
+aggregate(score~sex, data=cool.data, FUN=mean)
+```

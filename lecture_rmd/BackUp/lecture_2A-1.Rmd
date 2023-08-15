@@ -1,0 +1,40 @@
+---
+knit: (function(inputFile, encoding) {
+    rmarkdown::render(inputFile, encoding = encoding, output_dir = "../docs/")
+  })
+output: 
+  html_document:
+    css: style.css
+institute: "University of Wisconsin-River Falls"
+department: "College of Business and Economics"
+short-author: "Kelly"
+short-date: ''
+short-institute: "UWRF"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+if(!require(devtools)) {
+  install.packages("devtools")
+}
+if(!require(tutorial)) {
+  devtools::install_github("datacamp/tutorial")
+  library(tutorial)
+}
+
+tutorial::go_interactive(greedy = F, height = 600)
+```
+
+
+:::{.video-responsive}
+<iframe 
+src="https://www.youtube-nocookie.com/embed/f5WtVc483ys" 
+width="560" height="315" 
+title="YouTube video player" 
+frameborder="0" 
+allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+allowfullscreen 
+data-external="1">
+</iframe>
+:::

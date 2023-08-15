@@ -1,0 +1,170 @@
+---
+knit: (function(inputFile, encoding) {
+    rmarkdown::render(inputFile, encoding = encoding, output_dir = "../docs/")
+  })
+output: 
+  html_document:
+    output: html_notebook
+    css: style.css
+    code_folding: show
+institute: "University of Wisconsin-River Falls"
+department: "College of Business and Economics"
+short-author: "Kelly"
+short-date: ''
+short-institute: "UWRF"
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+# 1. How ANOVA Works
+
+This practice follows the example in LSR: 14.3
+
+## **Step 1:** Load the data and calculate descriptive statistics.
+
+```{r}
+# Load the data
+load(
+  url("https://ljkelly3141.github.io/ABE/data/clinicaltrial.Rdata")
+  )
+head(clin.trial)
+```
+
+```{r}
+# Calculate the overall mean of `mood.gain`
+Y.bar <- mean(clin.trial$mood.gain)
+Y.bar
+
+# Count of number subjects in each group 
+drug.count <- xtabs( ~drug, clin.trial ) 
+drug.count
+
+# Mean of mood.gain by drug group
+mood.gain_mean <- aggregate(mood.gain ~ drug, clin.trial, mean) 
+mood.gain_mean
+```
+
+## **Step 2:** Calculate the total sum of squared difference from the mean
+
+$$\sum_{i=1}^{N}{(Y_i-\bar{Y})^2}$$
+
+```{f}
+SS.tot <- sum((clin.trial$mood.gain - Y.bar)^2)
+SS.tot
+```
+
+## **Step 3:** Within-group sum of squares
+
+$$SS_{w} = \sum_{k=1}^{G}{\sum_{i=1}^{N_k}{(Y_{ik}-\bar{Y_k})^2}}$$
+
+```{r}
+# First, we make a new variable that has the group mean of each observation.
+clin.trial$group.mean <- mood.gain_mean[clin.trial$drug,2]
+head(clin.trial)
+```
+
+```{r}
+# Then, we can simply sum the squared difference.
+SS.w <- sum((clin.trial$mood.gain - clin.trial$group.mean)^2)
+SS.w
+```
+
+## **Step 4:** Between-group sum of squares
+
+$$SS_{b} = \sum_{k=1}^{G}{\sum_{i=1}^{N_k}{(\bar{Y_k}-\bar{Y})^2}}$$
+
+```{r}
+SS.b <- sum((clin.trial$group.mean - mean(clin.trial$mood.gain))^2)
+SS.b
+```
+
+## **Step 5:** Degrees of freedom
+
+```{r}
+# Within-group
+DF.w <- nrow(clin.trial)-nrow(mood.gain_mean)
+DF.w
+
+# Between-group
+DF.b <- nrow(mood.gain_mean)-1
+DF.b
+```
+
+## **Step 6:** Mean squares value
+
+```{r}
+MS.w <- SS.w/DF.w
+MS.w
+
+MS.b <- SS.b/DF.b
+MS.b
+```
+
+## **Step 7:** F-Stat
+
+```{r}
+F.stat <- MS.b/MS.w
+F.stat
+```
+
+## **Step 8:** p-value
+
+```{r}
+p.value <- pf( F.stat, df1 = DF.b, df2 = DF.w, lower.tail = FALSE)
+p.value
+```
+
+
+# 2. Use the `aggregate()` and `aov()` functions to calculate the average mood gain.
+
+```{r}
+# Mean of mood.gain by drug group
+mood.gain_mean <- aggregate(mood.gain ~ drug, data = clin.trial, FUN = length) 
+mood.gain_mean
+
+# Conduct ANOVA
+mood.gain_aov <- aov(mood.gain ~ drug, data = clin.trial)
+summary(mood.gain_aov)
+```
+
+# 3. Check assumptions
+
+## 3.A Check the homogeneity of variance assumption and run the Welch One-way Test.
+
+```{r}
+# Load the car package
+library("car")
+
+# Draw a boxplot of one.dose by state.control
+boxplot(mood.gain ~ drug, data = clin.trial)
+
+# Conduct the leveneTest()
+leveneTest(mood.gain_aov, center=mean)
+
+# Conduct the oneway.test()
+mood.gain_welch <- oneway.test(mood.gain ~ drug, data = clin.trial)
+mood.gain_welch
+```
+
+## 3.B Check the normality of residuals assumption
+
+
+
+
+```{r}
+# Plot a histogram of the residuals using hist()
+hist(mood.gain_aov$residuals)
+
+# Plot the Normal Q-Q Plot using qqnorm()
+qqnorm(mood.gain_aov$residuals)
+
+# Conduct the Shapiro Test using shapiro.test()
+shapiro.test(mood.gain_aov$residuals)
+
+# Conduct the Kruskal-Wallis test using kruskal.test()
+kruskal.test(mood.gain ~ drug, data = clin.trial)
+
+```
+

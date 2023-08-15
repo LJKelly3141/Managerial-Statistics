@@ -1,0 +1,470 @@
+---
+knit: (function(inputFile, encoding) {
+    rmarkdown::render(inputFile, encoding = encoding, output_dir = "../docs/")
+  })
+output: 
+  html_document:
+    output: html_notebook
+    css: style.css
+    code_folding: show
+institute: "University of Wisconsin-River Falls"
+department: "College of Business and Economics"
+short-author: "Kelly"
+short-date: ''
+short-institute: "UWRF"
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+# 1. ggplot Basics
+
+## 1.A Load and view the data
+
+```{r}
+pacman::p_load("tidyverse")
+data(BOD)
+head(BOD)
+```
+
+## 1.B Set data and mapping for the plot
+
+```{r}
+ggplot(data=BOD,
+       mapping=aes(x=Time,
+                   y=demand))
+```
+
+### Pipeing
+
+```{r}
+# Load the data
+load(
+  url("https://ljkelly3141.github.io/ABE/data/parenthood.Rdata")
+  )
+head(parenthood)
+
+summary(parenthood)
+
+regression.1 <- lm(formula = dan.grump ~ dan.sleep,  data = parenthood)
+summary(regression.1)
+
+
+"https://ljkelly3141.github.io/ABE/data/parenthood.Rdata" %>% 
+  url() %>% 
+  load() 
+
+```
+
+
+## 1.C Add a Point Geometry
+
+```{r}
+BOD %>% 
+ggplot(aes(x=Time, y=demand)) +
+  geom_point(size = 5) 
+```
+
+## 1.D Add a Line Geometry and some Style
+
+```{r}
+ggplot(data=BOD,
+       mapping=aes(x=Time,
+                   y=demand)) +
+  geom_point(size = 5) +
+  geom_line(color="red")
+```
+
+# 2. Anouther Example
+
+## 2.A Load and view the data
+
+```{r}
+pacman::p_load("tidyverse")
+data(CO2)
+head(CO2)
+```
+
+## 2.B Set up a Basic Scaterplot 
+```{r}
+CO2 %>% ggplot(aes(x = conc,
+                   y = uptake,
+                   color = Treatment))+
+  geom_point()
+```
+
+## 2.C Set add Smothing Geometry and some Style
+
+```{r}
+CO2 %>% ggplot(aes(x = conc,
+                   y = uptake,
+                   color = Treatment))+
+  geom_point(size = 3, alpha = 0.5) +
+  geom_smooth()
+```
+
+## 2.D Specify Linear Method of Smoothing and add a Facet
+
+```{r}
+CO2 %>% ggplot(aes(x = conc,
+                   y = uptake,
+                   color = Treatment))+
+  geom_point(size = 3, alpha = 0.5) +
+  geom_smooth(method = lm,se = F) +
+  facet_wrap(~Type)
+```
+
+## 2.E Add in labels and a theme
+
+```{r}
+CO2 %>% ggplot(aes(x = conc,
+                   y = uptake,
+                   color = Treatment))+
+  geom_point(size = 3, alpha = 0.5) +
+  geom_smooth(method = lm, se = F) +
+  facet_wrap(~Type) +
+  labs(title = "Consintration of CO2") +
+  theme_bw()
+```
+
+# 3. Boxplots
+
+## 3.A Set up a Basic Boxplot 
+
+```{r}
+CO2 %>% ggplot(aes(x = Treatment,
+                   y = uptake )) +
+  geom_boxplot()
+```
+
+## 3.B Set up a Basic Boxplot 
+```{r}
+CO2 %>% ggplot(aes(x = Treatment,
+                   y = uptake )) +
+  geom_boxplot() +
+  geom_point()
+```
+
+## 3.C Set up a add Point Geometry
+
+```{r}
+CO2 %>% ggplot(aes(x = Treatment,
+                   y = uptake )) +
+  geom_boxplot() +
+  geom_point(aes(size = conc,
+                 color = Plant))
+```
+
+## 3.D Set up a add Point Geometry
+
+```{r}
+CO2 %>% ggplot(aes(x = Treatment,
+                   y = uptake )) +
+  geom_boxplot() +
+  geom_point(
+    alpha = 0.5,
+    aes(size = conc,
+        color = Plant))
+```
+
+## 3.E Flip the Plot on its Side
+
+```{r}
+CO2 %>% ggplot(aes(x = Treatment,
+                   y = uptake )) +
+  geom_boxplot() +
+  geom_point(
+    alpha = 0.5,
+    aes(size = conc,
+        color = Plant)) +
+  coord_flip()+
+  theme_bw()
+```
+
+## 3.F Add a Facet to the Plot
+
+```{r}
+CO2 %>% ggplot(aes(x = Treatment,
+                   y = uptake )) +
+  geom_boxplot() +
+  geom_point(
+    alpha = 0.5,
+    aes(size = conc,
+        color = Plant)) +
+  coord_flip() +
+  theme_bw() +
+  facet_wrap(~Type) +
+  labs(title = "Chilled vs. Non-chilled")
+```
+
+# 4. Scaterplot
+
+## 4.A Set up a Basic Scaterplot 
+
+```{r}
+data(mpg)
+head(mpg)
+
+mpg %>% ggplot(aes(x = displ,
+                   y = cty )) +
+  geom_point()
+```
+
+## 4.B Add Factors to the Scaterplot 
+
+```{r}
+mpg %>% ggplot(aes(x = displ,
+                   y = cty )) +
+  geom_point(aes(color = drv,
+                 size = trans),
+             alpha = 0.5)
+```
+
+## 4.C Add Smoothing and a Facet
+
+```{r}
+mpg %>% ggplot(aes(x = displ,
+                   y = cty )) +
+  geom_point(aes(color = drv,
+                 size = trans),
+             alpha = 0.5) +
+  geom_smooth(method = lm) + 
+  facet_wrap(~year, nrow=1)
+```
+
+## 4.D Filter out Outliers
+
+```{r}
+mpg %>% 
+  filter(cty < 25) %>% 
+  ggplot(aes(x = displ,
+                   y = cty )) +
+  geom_point(aes(color = drv,
+                 size = trans),
+             alpha = 0.5) +
+  geom_smooth(method = lm) + 
+  facet_wrap(~year, nrow=1) 
+```
+
+## 4.E Add Lables
+
+```{r}
+mpg %>% 
+  filter(cty < 25) %>% 
+  ggplot(aes(x = displ,
+                   y = cty )) +
+  geom_point(aes(color = drv,
+                 size = trans),
+             alpha = 0.5) +
+  geom_smooth(method = lm) + 
+  facet_wrap(~year, nrow=1) +
+  labs(x = "Engine Size",
+       y = "City MPG",
+       title = "Fuel Efficiency")+
+  theme_bw()
+```
+
+# 5. Visualizing Categorical Data
+
+## 5.A Load and view the data
+
+```{r}
+pacman::p_load("tidyverse")
+data("msleep")
+head(msleep)
+```
+
+## 5.B Single Categorical Variable
+
+```{r}
+msleep %>% 
+  drop_na(vore) %>% 
+  ggplot(aes(x = vore)) +
+  geom_bar(fill = "#97B3C6") +
+  theme_bw() +
+  labs(x = "Vore",
+       y = NULL,
+       title = "Number of Ovservations per Order")
+```
+
+## 5.C Comment out `drop_na(vore) %>% `
+
+```{r}
+msleep %>% 
+# drop_na(vore) %>% 
+  ggplot(aes(x = vore)) +
+  geom_bar(fill = "#97B3C6") +
+  theme_bw() +
+  labs(x = "Vore",
+       y = NULL,
+       title = "Number of Ovservations per Order")
+```
+
+
+## 5.D Dropping too much data
+
+```{r}
+msleep %>% 
+  drop_na() %>% 
+  ggplot(aes(x = vore)) +
+  geom_bar(fill = "#97B3C6") +
+  theme_bw() +
+  labs(x = "Vore",
+       y = NULL,
+       title = "Number of Ovservations per Order")
+```
+
+## 5.E Flip the coordinates 
+
+```{r}
+msleep %>% 
+  drop_na(vore) %>% 
+  ggplot(aes(x = vore)) +
+  geom_bar(fill = "#97B3C6") +
+  theme_bw() +
+  labs(x = "Vore",
+       y = NULL,
+       title = "Number of Ovservations per Order") +
+  coord_flip()
+```
+
+## 5.F Reorder by Number of Observations 
+
+```{r}
+msleep %>% 
+  drop_na(vore) %>% 
+  ggplot(aes(x = fct_infreq(vore))) +
+  geom_bar(fill = "#97B3C6") +
+  theme_bw() +
+  labs(x = "Vore",
+       y = NULL,
+       title = "Number of Ovservations per Order")
+```
+
+# 6.  Single Numeric Variable
+
+## 6.A Basic Histogram Setup
+
+```{r}
+msleep %>% 
+  ggplot(aes(x = awake)) +
+  geom_histogram(binwidth = 2, fill = "#97B3C6") +
+  theme_bw() +
+  labs(x = "Total Sleep",
+       y = NULL,
+       title = "Histogram of Total Sleep")
+```
+
+## 6.B Omit the Histogram Options 
+
+```{r}
+msleep %>% 
+  ggplot(aes(x = awake)) +
+  geom_histogram() +
+  theme_bw() +
+  labs(x = "Total Sleep",
+       y = NULL,
+       title = "Histogram of Total Sleep")
+```
+
+## 6.C Histograms with Various Bin Widths 
+
+::: {.info-box .note}
+I cheated a bit here. The package gridExtra let's me layout multiple plots together. This also demonstrates the power of the grammar of graphics. I can save a basic plot object and add what changes. In this case, the bin width and the title.
+:::
+
+```{r, fig.width=8, fig.height=5}
+pacman::p_load("gridExtra")
+
+h <- msleep %>% 
+  ggplot(aes(x = awake)) +
+  theme_bw() +
+  labs(x = "Total Sleep",
+       y = NULL)
+
+grid.arrange(h + geom_histogram(binwidth = 1, fill = "#97B3C6") + ggtitle("Bin = 1"),
+             h + geom_histogram(binwidth = 2, fill = "#97B3C6") + ggtitle("Bin = 2"),
+             h + geom_histogram(binwidth = 5, fill = "#97B3C6") + ggtitle("Bin = 5"),
+             h + geom_histogram(binwidth = 10, fill = "#97B3C6") + ggtitle("Bin = 10"), 
+             nrow = 2)
+```
+
+# 7. Visualizing Mixed Data Sets
+
+## 7.A Load the `starwars` data set
+
+```{r}
+data(starwars)
+head(starwars)
+```
+
+## 7.B Barplot with two catagorical variables 
+
+```{r}
+starwars %>% 
+  filter(hair_color == "black" |
+         hair_color == "brown") %>% 
+  drop_na(sex) %>% 
+  ggplot(aes(hair_color, fill = sex)) +
+  geom_bar(position = "dodge",
+           alpha = 0.5) +
+  theme_bw() +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) +
+  labs(title = "Sex and Hair Color",
+       x = "Hair Color",
+       y = "Number")
+```
+
+## 7.C Barplot with `position = "fill"`
+
+```{r}
+starwars %>% 
+  filter(hair_color == "black" |
+         hair_color == "brown") %>% 
+  drop_na(sex) %>% 
+  ggplot(aes(hair_color, fill = sex)) +
+  geom_bar(position = "fill",
+           alpha = 0.5) +
+  theme_bw() +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) +
+  labs(title = "Sex and Hair Color",
+       x = "Hair Color",
+       y = "Number")
+```
+
+## 7.D Barplot with no Theme
+
+```{r}
+starwars %>% 
+  filter(hair_color == "black" |
+         hair_color == "brown") %>% 
+  drop_na(sex) %>% 
+  ggplot(aes(hair_color, fill = sex)) +
+  geom_bar(position = "dodge",
+           alpha = 0.5)
+```
+
+## 7.E Barplot with no position specified
+
+```{r}
+starwars %>% 
+  filter(hair_color == "black" |
+         hair_color == "brown") %>% 
+  drop_na(sex) %>% 
+  ggplot(aes(hair_color, fill = sex)) +
+  geom_bar(alpha = 0.5) +
+  theme_bw() +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) +
+  labs(title = "Sex and Hair Color",
+       x = "Hair Color",
+       y = "Number")
+```
+
+
+
+
+

@@ -1,0 +1,149 @@
+---
+knit: (function(inputFile, encoding) {
+    rmarkdown::render(inputFile, encoding = encoding, output_dir = "../docs/")
+  })
+output: 
+  html_document:
+    output: html_notebook
+    css: style.css
+    code_folding: show
+institute: "University of Wisconsin-River Falls"
+department: "College of Business and Economics"
+short-author: "Kelly"
+short-date: ''
+short-institute: "UWRF"
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+# Model building
+
+## 1 $R^2$ - Misunderstood, Misused, and Abused
+
+Here is a good blog post on $R^2$: [How To Interpret R-squared in Regression Analysis](https://statisticsbyjim.com/regression/interpret-r-squared-regression/)
+
+### Load Packages and Data
+
+```{r}
+# Load packages
+pacman::p_load("psych","car","jtools")
+
+# Load the data
+load(
+  url("https://ljkelly3141.github.io/ABE/data/parenthood.Rdata")
+  )
+head(parenthood)
+```
+
+### 1.A Simulate some examples
+
+```{r}
+# Set parameters
+b0 <- 0
+b1 <- 1
+e1 <- 20
+e2 <- 5
+
+# Simulate data
+x <- 1:100
+y1 <- b0 + b1*x + b1*e1*rnorm(length(x))
+y2 <- b0 + b1*x + b1*e2*rnorm(length(x))
+
+# Set common y-axis limits
+ymin <- min(c(y1,y2))
+ymax <- max(c(y1,y2))
+
+# Estimate two models
+models <- list(
+  "Model 1" = lm(y1~x),
+  "Model 2" = lm(y2~x)
+)
+```
+
+### 1.B What is $R^2$
+
+Graphical view of $R^2$
+
+```{r}
+plot(y1~x,ylim=c(ymin,ymax))
+abline(h=mean(y1),col="red")
+abline(models[[1]],col="blue")
+```
+
+### 1.C What should $R^2$ be?
+
+Plot with more noise:
+
+```{r}
+plot(y1~x,ylim=c(ymin,ymax))
+abline(a=c(b0,b1),col="red")
+abline(models[[1]],col="blue")
+```
+
+Plot with less noise:
+
+```{r}
+plot(y2~x,ylim=c(ymin,ymax))
+abline(a=c(b0,b1),col="red")
+abline(models[[2]],col="blue")
+```
+
+Regression estimates:
+
+```{r}
+export_summs(models)
+```
+
+## 2 Model selection
+
+-   Understand the trade-off between goodness-of-fit and over fitting.
+-   Use variable selection procedures to find a good model from a set of possible models.
+-   Understand the two uses of models: explanation and prediction.
+
+### 2.A Information Criterion
+
+-   **Akaike Information Criterion** is $$\text{AIC} = -2 \log L(\boldsymbol{\hat{\beta}}, \hat{\sigma}^2) + 2p = n + n \log(2\pi) + n \log\left(\frac{\text{RSS}}{n}\right) + 2p$$ where $\log L(\boldsymbol{\hat{\beta}}, \hat{\sigma}^2)$ $$\log L(\boldsymbol{\hat{\beta}}, \hat{\sigma}^2) = -\frac{n}{2}\log(2\pi) - \frac{n}{2}\log\left(\frac{\text{RSS}}{n}\right) - \frac{n}{2}$$ where $\text{RSS} = \sum_{i=1}^n (y_i - \hat{y}_i) ^ 2$ and $\boldsymbol{\hat{\beta}}$ and $\hat{\sigma}^2$ were chosen to maximize the likelihood.<br><br>
+-   **Bayesian Information Criterion** is $$\text{BIC} = n + n\log(2\pi) + n\log\left(\frac{\text{RSS}}{n}\right) + \log(n)p$$<br><br>
+-   **Adjusted R-Squared** is $$R_a^2 = 1 - \left(  \frac{n-1}{n-p} \right)(1-R^2)$$<br><br>
+
+### 2.B Backward elimination
+
+```{r}
+full.model <- lm(formula = dan.grump ~ dan.sleep + baby.sleep + day, data = parenthood)
+```
+
+```{r}
+step( object = full.model,     # start at the full model
+       direction = "backward"  # allow it remove predictors but not add them
+ )
+```
+
+### 2.C Forward selection
+
+```{r}
+null.model <- lm( dan.grump ~ 1, parenthood )             # intercept only.
+ step( object = null.model,                               # start with null.model
+       direction = "forward",                             # only consider "addition" moves
+       scope =  dan.grump ~ dan.sleep + baby.sleep + day  # largest model allowed
+ )
+```
+
+### 2.D Comparing two regression models
+
+```{r}
+M0 <- lm( dan.grump ~ dan.sleep, parenthood )
+M1 <- lm( dan.grump ~ dan.sleep + day + baby.sleep, parenthood )
+
+export_summs(M0,M1)
+```
+
+```{r}
+AIC( M0, M1 )
+
+anova( M0, M1 )
+```
+
+
+<a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img src="https://i.creativecommons.org/l/by/3.0/88x31.png" alt="Creative Commons License" style="border-width:0"/></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.

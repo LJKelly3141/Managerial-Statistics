@@ -1,0 +1,44 @@
+---
+knit: (function(inputFile, encoding) {
+    rmarkdown::render(inputFile, encoding = encoding, output_dir = "../docs/")
+  })
+output: 
+  html_document:
+    css: style.css
+institute: "University of Wisconsin-River Falls"
+department: "College of Business and Economics"
+short-author: "Kelly"
+short-date: ''
+short-institute: "UWRF"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+if(!require(devtools)) {
+  install.packages("devtools")
+}
+if(!require(tutorial)) {
+  devtools::install_github("datacamp/tutorial")
+  library(tutorial)
+}
+
+tutorial::go_interactive(greedy = F, height = 600)
+```
+
+
+
+### About this sub-module
+
+In this sub module you will learn about RStudio and set up an RStudio Cloud account. You can navigate this sub-module via the next and previous buttons below. 
+
+Here is a summery of what will follow:
+
+- Introduction to RStudio Cloud
+   * This is a blog post that was written to help attendees of a workshop on RStudio Cloud prepare for the workshop.
+   * It will lead you through the steps to set up an RStudio Cloud account.
+- Task: Sign-up for RStudio Cloud Account
+   * First task: Note all tasks must be completed by the due date to receive credit (no late assignments will be accepted)
+   * This is a graded survey, so that I can check you progress. 
+
+

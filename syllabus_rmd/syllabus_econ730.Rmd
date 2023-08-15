@@ -1,0 +1,125 @@
+---
+title: "Analytics for Business and Economics"
+author: "Dr. Logan J. Kelly"
+knit: (function(inputFile, encoding) {
+    rmarkdown::render(inputFile, encoding = encoding, output_dir = "../docs/")
+  })
+output:
+  pdf_document: default
+  html_document:
+    css: style.css
+institute: "University of Wisconsin-River Falls"
+department: "College of Business and Economics"
+short-author: "Kelly"
+short-date: ''
+short-institute: "UWRF"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+[Printer Friendly Version](https://ljkelly3141.github.io/ABE/syllabus_econ326.pdf)
+
++---------------------------------------------------------------------+--------------------------+
+| # Contact Information                                               | # Office Hours           |
++---------------------------------------------------------------------+--------------------------+
+| Email: [logan.kelly\@uwrf.edu](mailto:logan.kelly@uwrf.edu){.email} | By appointment link:     |
++---------------------------------------------------------------------+--------------------------+
+| Phone: (715) 425-4993                                               | <http://tiny.cc/DrKelly> |
++---------------------------------------------------------------------+--------------------------+
+| Mobile: (401) 256-0986                                              |                          |
++---------------------------------------------------------------------+--------------------------+
+| Office: South Hall 127E                                             |                          |
++---------------------------------------------------------------------+--------------------------+
+
+# Course Description
+
+The course will examine different data analysis techniques and their many applications. Students will use industry standard data analytics software, such as R and RStudio, to solve business and economics problems. They will also use state of the art tools to analyze data using both visual and statistical techniques.
+
+# Prerequisites
+
+A grade of C- or better in (ECON 226 or MATH 226 or equivalent of Introductory Statistics from other areas).
+
+# Technology Requirements
+
+You will need the following to complete this class.
+
+-   Computer with internet access. A tablet or Chromebook may not be sufficient to complete all class activities.
+-   Reliable broadband internet service.
+-   Microphone and web camera
+
+If you need help getting set up for classes, please let me know.
+
+# Course Objectives
+
+At the end of this course, students will be able to:
+
+-   Conduct statistical analysis using industry standard data analytics software, such as R and RStudio
+-   Conduct and interpret various hypothesis tests including Chi-Square, Joint Significance and ANOVA
+-   Estimate and interpret multivariate regression models
+-   Evaluate multivariate regression models
+-   Analyze and present data visually
+-   Utilize industry standard data analytics software, such as R and RStudio, for pre- and post-processing, i.e. wrangle of data.
+
+# Required Text
+
+-   Introductory Statistics. Openstax. Barbara Illowsky, et. al. <https://openstax.org/details/books/introductory-statistics>
+
+-   Learning Statistics with R - A tutorial for Psychology Students and other Beginners. Danielle Navarro [https://stats.libretexts.org/\@go/page/3936](https://stats.libretexts.org/@go/page/3936){.uri}
+
+# Exams / Case Studies
+
+This course is divided into 8 modules. There will be one or two cases covering each modules. You will be able to resubmit each case as many times as you would like up to the the submission cutoff. All cases must be completed by the end of the course.
+
+# Reading
+
+Reading in an online class is even more important than in a traditional class. Just as in a traditional class, you should read each chapter before viewing the lecture video. There also may be material on exams that is covered in the reading, but not covered in the lecture videos.
+
+# Online Office Hours and Communication
+
+This course is not meant to be a self-study correspondence course. It is important that you have access to a qualified instructor for the same individualized instruction that you would receive in a tradition course. To facilitate this, I will use Zoom.
+
+While this is a web-based course, I am easily accessible. Please try to use MS Teams to contact me, but if needed, here is my email, and phone:
+
+-   Email: [logan.kelly\@uwrf.edu](mailto:logan.kelly@uwrf.edu){.email}
+-   MS Teams: [Message Dr. Kelly](https://teams.microsoft.com/dl/launcher/launcher.html?url=%2F_%23%2Fl%2Fchat%2F0%2F0%3Fusers%3Dlogan.kelly%40uwrf.edu&type=chat&deeplinkId=bc9f7c4d-4955-4bdb-a1aa-c2c7e7d86f2c&directDl=true&msLaunch=true&enableMobilePage=true&suppressPrompt=true)
+-   Phone: (715) 425-4993
+-   Mobile: (401) 256-0986
+
+To schedule, an appointment with me use this link: <http://tiny.cc/DrKelly>
+
+# Synchronous Class Meetings
+
+This class will meet synchronously on Zoom. Synchronous class meetings can be found at <https://tiny.cc/ECON326-LEC>. The password is 326326.
+
+# Grading
+
+Your grade will be determined by calculating the weighted average of your chapter quizzes and your exam scores. The weights are as follows:
+
+|                 |     |
+|-----------------|----:|
+| Case Studies    | 90% |
+| Tasks           |  5% |
+| Wrap-up Quizzes |  5% |
+
+Letter Grades will be assigned as follows:
+
+|     |                 |     |     |                 |
+|-----|----------------:|-----|-----|----------------:|
+| A   | 93.50% or above |     | C   | 72.50% - 77.49% |
+| A-  | 89.50% - 93.49% |     | C-  | 69.50% - 72.49% |
+| B+  | 87.50% - 89.49% |     | D+  | 67.50% - 69.49% |
+| B   | 82.50% - 87.49% |     | D   | 59.50% - 67.49% |
+| B-  | 79.50% - 82.49% |     | F   | 59.49 or bellow |
+| C+  | 77.50% - 79.49% |     |     |                 |
+
+This scale may be adjusted at the end of the semester. If your grade is a borderline case (within 1% of the next highest letter grade), participation will be used to determine whether you will receive the higher grade.
+
+# Students with disabilities
+
+Any student in this course who has a disability that prevents the fullest expression of abilities should contact me personally as soon as possible so that we can discuss class requirements and accommodations. The University of Wisconsin-River Falls welcomes students with disabilities into its educational programs, activities, residential halls, and everything else it offers. Those who will need academic adjustments or accommodations for a disability should contact the Disability Services Office (105 Davee Library; 715-425-3531). Before final decisions can be made to allow academic adjustments and accommodations students must provide documentation that sufficiently indicates the nature of their situation. Additional information is available at <http://www.uwrf.edu/disabilityservices/ADA.html>.
+
+# Academic Misconduct
+
+The university has a responsibility to promote academic honesty and integrity and to develop procedures to deal effectively with instances of academic dishonesty. Students are responsible for the honest completion and representation of their work, for the appropriate citation of sources, and for respect of others' academic endeavors. A more detailed description of Student Academic Disciplinary Procedures may be found in Regents Policy Statements, UWS Chapter 14.

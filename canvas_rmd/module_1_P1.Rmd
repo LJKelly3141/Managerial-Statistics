@@ -1,0 +1,50 @@
+---
+knit: (function(inputFile, encoding) {
+    rmarkdown::render(inputFile, encoding = encoding, output_dir = "../docs/")
+  })
+output: 
+  html_document:
+    css: style.css
+institute: "University of Wisconsin-River Falls"
+department: "College of Business and Economics"
+short-author: "Kelly"
+short-date: ''
+short-institute: "UWRF"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+pacman::p_load(devtools,rmarkdown,tidyverse,vembedr)
+pacman::p_load_current_gh("datacamp/tutorial")
+
+# tutorial::go_interactive(greedy = F, height = 600)
+```
+
+![](img/ABE_title.jpg)
+
+<span style="font-size: 18pt">
+This module will introduce you to R and R Studio (via Posit.Cloud). You will setup an RStudio Cloud account, and learn some of the basics of the R language.
+</span>
+
+## Module Outline
+
+### 1.A. RStudio Cloud
+
+-   Set up RStudio Cloud account
+-   Explore RStudio Cloud
+
+### 1.B. Getting started in R
+
+-   Commands and Calculations
+-   Functions
+-   Vectors and Lists
+-   Wrapping Up Chapter 3
+
+## Reading
+
+-   [Introduction to RStudio Cloud (Blog post by Ashwin Malshe)](your_link_here)
+-   [Chapter 3 (Learning Statistics with R)](your_link_here)
+
+## Tasks
+
+-   Sign-up for Posit Cloud Account

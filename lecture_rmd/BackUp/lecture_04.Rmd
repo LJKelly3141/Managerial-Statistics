@@ -1,0 +1,266 @@
+---
+knit: (function(inputFile, encoding) {
+    rmarkdown::render(inputFile, encoding = encoding, output_dir = "../docs/")
+  })
+output: 
+  html_document:
+    output: html_notebook
+    css: style.css
+    code_folding: show
+institute: "University of Wisconsin-River Falls"
+department: "College of Business and Economics"
+short-author: "Kelly"
+short-date: ''
+short-institute: "UWRF"
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+# 1. What is regression?
+
+This lecture follows the example in LSR: 15.1 What is regression? It will lead you through the steps of conducting a regression analysis.
+
+## **Step 1:** Load the data and calculate descriptive statistics.
+
+```{r}
+# Load packages
+pacman::p_load("psych","car","jtools")
+
+# Load the data
+load(
+  url("https://ljkelly3141.github.io/ABE/data/parenthood.Rdata")
+  )
+head(parenthood)
+
+# Summarize the data
+describe(parenthood,skew = F,ranges = F)
+```
+
+## **Step 2:** Examine the correlation between variables
+
+```{r}
+pairs.panels(parenthood)
+```
+
+## **Step 3:** Estimate regression model
+
+```{r}
+regression.1 <- lm(formula = dan.grump ~ dan.sleep,  data = parenthood)
+summary(regression.1)
+summ(regression.1)
+```
+
+## **Step 4:** Multiple regression
+
+```{r}
+regression.2 <- lm(formula = dan.grump ~ dan.sleep + baby.sleep,  data = parenthood)
+
+regression.2.sum <- summary(regression.2)
+regression.2.sum
+
+summ(regression.2)
+```
+
+## **Step 5:** Multiple regression visualized
+
+### 3D Plot
+
+```{r}
+pacman::p_load("rgl")
+open3d()
+plot3d(regression.2, type = "s", size = 0.75, lit = FALSE)
+interleave <- function(v1, v2)  as.vector(rbind(v1,v2))
+
+attach(parenthood)
+segments3d(interleave(dan.sleep, dan.sleep),
+           interleave(baby.sleep, baby.sleep),
+           interleave(dan.grump,  regression.2$fitted.values),
+           alpha = 0.6, col = "blue")
+
+rglwidget(width = 800, height = 800)
+close3d()
+```
+
+### 2D Slices
+
+```{r}
+plot(dan.grump~dan.sleep, data = parenthood)
+abline(regression.2)
+
+plot(dan.grump~baby.sleep, data = parenthood)
+abline(regression.2)
+```
+
+### Actual vs Fitted Values
+
+```{r}
+plot(parenthood$dan.grump~regression.2$fitted.values)
+abline(a=c(0,1))
+```
+
+# 2. Model checking
+
+## **Step 1:** Check normality of the residuals.
+
+Like half the models in statistics, standard linear regression relies on an assumption of normality. Specifically, it assumes that the residuals are normally distributed. It's actually okay if the predictors X and the outcome Y are non-normal, so long as the residuals are normal. See LSR: 15.9.3.
+
+```{r}
+# Plot histogram of residuals
+hist(regression.2$residuals)
+
+# Conduct the Shapiro Test using shapiro.test()
+shapiro.test(regression.2$residuals)
+```
+
+## **Step 2:** Check Linearity.
+
+A pretty fundamental assumption of the linear regression model is that relationship between X and Y actually be linear! Regardless of whether it is a simple regression or a multiple regression, we assume that the relationships involved are linear. See Section 15.9.4.
+
+```{r}
+# Scatter plot of independent variables vs dependent variable.
+plot(dan.grump ~ dan.sleep + baby.sleep,  data = parenthood)
+
+# Fitted vs actual plot
+plot(parenthood$dan.grump~regression.2$fitted.values)
+abline(a=c(0,1))
+```
+
+## **Step 3:** Check homogenaiety of varience.
+
+Strictly speaking, the regression model assumes that each residual $\varepsilon_i$ is generated from a normal distribution with mean 0, and (more importantly for the current purposes) with a standard deviation $\sigma$ that is the same for every single residual. In practice, it's impossible to test the assumption that every residual is identically distributed. Instead, what we care about is that the standard deviation of the residual is the same for all values of $\hat{Y}$, and (if we are being especially paranoid) all values of every predictor X in the model. See Section 15.9.5.
+
+```{r}
+# Scatter plot of residuals vs. fitted values.
+plot(regression.2,which=1)
+abline(h=0)
+
+# Fitted vs actual plot
+plot(regression.2$residuals ~ dan.sleep,  data = parenthood)
+abline(h=0)
+plot(regression.2$residuals ~ baby.sleep,  data = parenthood)
+abline(h=0)
+
+# Test for heteroscdaticity
+pacman::p_load("lmtest")
+bptest(regression.2,studentize=TRUE)
+```
+
+## **Step 4:** Check for uncorrelated predictors.
+
+The idea here is that, is a multiple regression model, you do not want your predictors to be too strongly correlated with each other. This is not "technically" an assumption of the regression model, but in practice it is required. Predictors that are too strongly correlated with each other (referred to as "collinearity") can cause problems when evaluating the model. See Section 15.9.6
+
+```{r}
+pacman::p_load("psych")
+pairs.panels(parenthood)
+
+pacman::p_load("car")
+vif(regression.2)
+
+pacman::p_load("jtools")
+summ(regression.2,vif=T)
+```
+
+## **Step 5:** Check for serial correlation.
+
+Residuals are independent of each other. This is really just a "catch all" assumption, to the effect that "there is nothing else funny going on in the residuals". If there is something weird (e.g., the residuals all depend heavily on some other unmeasured variable) going on, it might screw things up.
+
+```{r}
+# Scatter plot of residuals vs. fitted values.
+plot(regression.2$residuals ~ day, data = parenthood)
+abline(h=0)
+
+bgtest(regression.2, order.by = parenthood$day)
+```
+
+## **Step 5:** Check for "bad" outliers.
+
+Again, not actually a technical assumption of the model (or rather, it's sort of implied by all the others), but there is an implicit assumption that your regression model is not being too strongly influenced by one or two anomalous data points; since this raises questions about the adequacy of the model, and the trustworthiness of the data in some cases. See Section 15.9.2.
+
+```{r}
+ols.summary <- summary(regression.2)
+
+boxplot(regression.2$residuals,horizontal = T)
+
+plot(regression.2$residuals~regression.2$fitted.values)
+abline(h=0)
+abline(h=c(0,
+           ols.summary$sigma,
+           -1*ols.summary$sigma, 
+           2*ols.summary$sigma,
+           -2*ols.summary$sigma
+           ),
+       lty=c(1,6,6,2,2)
+       )
+
+```
+
+# 3 $R^2$ - Misunderstood, Misused, and Abused
+
+Here is a good blog post on $R^2$: [How To Interpret R-squared in Regression Analysis](https://statisticsbyjim.com/regression/interpret-r-squared-regression/)
+
+## 3.A Simulate some examples
+
+```{r}
+# Set parameters
+b0 <- 0
+b1 <- 1
+e1 <- 20
+e2 <- 5
+
+# Simulate data
+x <- 1:100
+y1 <- b0 + b1*x + b1*e1*rnorm(length(x))
+y2 <- b0 + b1*x + b1*e2*rnorm(length(x))
+
+# Set common y-axis limits
+ymin <- min(c(y1,y2))
+ymax <- max(c(y1,y2))
+
+# Estimate two models
+models <- list(
+  "Model 1" = lm(y1~x),
+  "Model 2" = lm(y2~x)
+)
+```
+
+## What is $R^2$ 
+
+Graphical view of $R^2$ 
+
+```{r}
+plot(y1~x,ylim=c(ymin,ymax))
+abline(h=mean(y1),col="red")
+abline(models[[1]],col="blue")
+```
+
+
+### What should $R^2$  be?
+
+Plot with more noise:
+
+```{r}
+plot(y1~x,ylim=c(ymin,ymax))
+abline(a=c(b0,b1),col="red")
+abline(models[[1]],col="blue")
+```
+
+
+Plot with less noise:
+
+```{r}
+plot(y2~x,ylim=c(ymin,ymax))
+abline(a=c(b0,b1),col="red")
+abline(models[[2]],col="blue")
+```
+
+Regression estimates:
+
+```{r}
+export_summs(models)
+```
+
+
+
+<a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img src="https://i.creativecommons.org/l/by/3.0/88x31.png" alt="Creative Commons License" style="border-width:0"/></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.

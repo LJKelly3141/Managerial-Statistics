@@ -1,0 +1,73 @@
+---
+knit: (function(inputFile, encoding) {
+    rmarkdown::render(inputFile, encoding = encoding, output_dir = "../docs/")
+  })
+output:
+  html_document:
+    css: style.css
+institute: "University of Wisconsin-River Falls"
+department: "College of Business and Economics"
+short-author: "Kelly"
+short-date: ''
+short-institute: "UWRF"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+if(!require(devtools)) {
+  install.packages("devtools")
+}
+if(!require(tutorial)) {
+  devtools::install_github("datacamp/tutorial")
+  library(tutorial)
+}
+
+tutorial::go_interactive(greedy = F, height = 600)
+```
+
+## Welcome to class!
+
+Welcome to Analytics for Business and Economics. I am looking forward to learning statistics with you. This is the TLDR for the class. Here I will set out some of the expectations for the class and a few class policies. You should also read the class syllabus, see the next page.
+
+## Key points about this class:
+
+-   This course is scheduled for the winter term. It will run from 12/27/2022 - 01/20/2023. **All work must be completed by 01/20/2023.**
+-   Lecture videos will be published each week of the class.
+-   I will meet with you for one-on-one help sessions via zoom. To schedule an appointment with me, use this link: <a href="http://tiny.cc/DrKelly" target="_blank">http://tiny.cc/DrKelly</a>
+
+
+## Before class you should do the following:
+
+-   Ensure you have the latest release of Zoom on your computer.
+-   Test your audio and video setup by running a [Zoom meeting test](https://zoom.us/test){target="_blank"}.
+-   Register for a free R Studio Cloud account. Register here: [https://rstudio.cloud/plans/free](https://rstudio.cloud/plans/free){target="_blank"}.
+-   Read all the emails I send you!
+-   Join the RStudio.Cloud class workspace using this link: [RStudio.Cloud Workspace](http://tiny.cc/ECON326-WORKSPACE "ECON326-WORKSPACE"){target="_blank"}.
+
+## Technology Requirements
+
+You will need the following to complete this class.
+
+-   Computer with internet access. A tablet or Chromebook may not be sufficient to complete all class activities.
+-   Reliable broadband internet service.
+-   Microphone and web camera
+
+If you need help getting set up for classes, please let me know.
+
+## Announcements and Communication
+
+The main mode of communication for this class will be through MS Teams. Please use MS Teams to contact me. You can send a message to me privately through MS Teams chat tool (Here is a link <a href="https://support.microsoft.com/en-us/office/start-and-pin-chats-a864b052-5e4b-4ccf-b046-2e26f40e21b5" target="_blank">all about chat.</a>) I recommend installing MS Teams on your computer and mobile device.
+
+Here is a link to send me a message on teams: <http://tiny.cc/DrKelly-Chat>
+
+## Instructor Contact Information
+
+While this is a web-based course, I am easily accessible. Please try to use MS Teams to contact me, but if needed, here is my email, and phone:
+
+-   Email: <a href="mailto:logan.kelly@uwrf.edu">logan.kelly\@uwrf.edu</a>
+-   MS Teams: <http://tiny.cc/DrKelly-Chat>
+-   Phone: (715) 425-4993
+-   Mobile: (401) 256-0986
+
+To schedule an appointment with me, use this link: <a href="http://tiny.cc/DrKelly" target="_blank">http://tiny.cc/DrKelly</a>

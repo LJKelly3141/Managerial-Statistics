@@ -1,0 +1,153 @@
+```{r data generation, echo = FALSE, results = "hide"}
+## DATA GENERATION
+
+catagories = list('outfit' = 
+           c("Dress", "Jeans", "Skirt Shorts"), # GPA
+         'employment' = 
+           c("Unemployed", "Part Time Worker", "Full Time Worker"), # sleep time
+         'major' = 
+           c("Math/Science", "Arts and Humanities", "Business and Economics", "Others"), # Credits to degree
+         'residence' = 
+           c("City",	"Suburbs",	"Rural"), # age of first kiss
+         'car' = 
+           c("Sedan",	"SUV",	"Truck"), # average commute in miles
+         'mode' = 
+           c("Online",	"Hybrid",	"Face-To-Face"), # final exam
+         'hospital' = 
+           c("Overnight Hospital Stay", "A Few Hours in the Hospital", "Sent Home with Medicine") # days to recovery
+         )
+
+distrobution <- list(
+         'outfit' = 
+           c("mu" = 2.75, "sd" = 0.75, "min"= 1.0, "max" = 4.0, "digits" = 2), # GPA
+         'employment' = 
+           c("mu" = 6, "sd" = .5, "min"= 4, "max" = 9, "digits" = 1), # sleep time
+         'major' = 
+           c("mu" = 130, "sd" = 25, "min"= 120, "max" = 160, "digits" = 0), # Credits to degree
+         'residence' = 
+           c("mu" = 14, "sd" = 2, "min"= 11, "max" = 20, "digits" = 0), # age of first kiss
+         'car' = 
+           c("mu" = 25, "sd" = 5, "min"= 5, "max" = 50, "digits" = 2), # average commute in miles
+         'mode' = 
+           c("mu" = 75, "sd" = 10, "min"= 40, "max" = 100, "digits" = 2), # final exam
+         'hospital' = 
+           c("mu" = 12, "sd" = 3, "min"= 7, "max" = 20, "digits" = 0) # days to recovery
+         )
+
+question <- list(
+         'outfit' = 
+          "A researcher wants to know if the clothes a woman wears is a factor in her GPA. The table below shows data that was collected from a survey.", # GPA
+         'employment' = 
+           "A researcher wants to know if there is a difference between the mean amount of sleep that people get for various types of employment status. The table below shows data that was collected from a survey.", # sleep time
+         'major' = 
+           "The university provost wants to know if the number of credits students earn before graduation differs by major. The table below shows data that was collected.", # Credits to degree
+         'residence' = 
+           "Is the type of area that a person lives in a factor in the age that a person experiences their first passionate kiss? The table below shows data that was collected.", # age of first kiss
+         'car' = 
+           "A researcher wants to know if there is a difference between the mean distance owners of various types of cars commute. The table below shows data that was collected from a survey.", # average commute in miles
+         'mode' = 
+           "Is a statistics class' delivery type a factor in how well students do on the final exam? The table below shows the average percent on final exams from several randomly selected classes that used the different delivery types.", # final exam
+         'hospital' = 
+           "A hospital wants to determine if the type of treatment for pneumonia is a factor in recovery time? The table below shows the number of days to recovery for several randomly selected pneumonia patients that had various types of treatment." # days to recovery
+         )
+
+cat.n <- lengths(catagories)
+conf.level <- sample(c(0.9,0.95,0.99),1)
+sig.level <- 1-conf.level
+Q <-  sample(1:length(catagories),1)
+
+n <- 100 + sample(c(5,10,15,20,25,30), cat.n[Q])
+dat <- data.frame(
+  id = sapply(n,FUN=function(x) 1:x) %>% unlist(),
+  value = rnorm(sum(n),
+    mean = rep(sample(
+      runif(100,min=distrobution[[Q]]["min"],max=distrobution[[Q]]["max"])
+      , cat.n[Q]), n),
+    sd = if(runif(1)<.5) {
+      distrobution[[Q]]["sd"]
+    } else {
+      rep(sample( 
+      rnorm(n = 100,mean = distrobution[[Q]]["sd"],sd = distrobution[[Q]]["sd"]*.1) ,
+      cat.n[Q]) , n)
+    }
+    ),
+  catagory = factor(rep(1:cat.n[Q], n),
+    labels = catagories[[Q]])
+  )
+dat$value[dat$value > distrobution[[Q]]["max"]] <- distrobution[[Q]]["max"]
+dat$value[dat$value <  distrobution[[Q]]["min"]] <- distrobution[[Q]]["min"]
+dat$value <- round(dat$value,distrobution[[Q]]["digits"])
+
+aov.out <- aov(value~catagory,data=dat)
+aov.summ <- summary(aov.out)
+
+test.out <- leveneTest( aov.out )
+
+Q1 = sample(1:2,1)
+q.text <- list(
+  'p.value' = "What is the p-value of the ANOVA test?",
+  'f' =   "What is the $f-statistic$ of the ANOVA test?"
+)
+
+q.ans <- list(
+  'p.value' = aov.summ[[1]]$`Pr(>F)`[1],
+  'f' =   aov.summ[[1]]$`F value`[1]
+)
+
+
+
+if(test.out$`Pr(>F)`[1]<0.1){
+  q.solution <- c(0,0,0,1)
+} else {
+  q.solution <- c(1,0,0,0)
+}
+
+```
+
+Question
+========
+
+`r question[[Q]]`
+
+**First six rows of the data frame:**
+```{r, echo = FALSE}
+dat %>% 
+  pivot_wider(names_from = catagory, values_from = value) %>% 
+  select(-id) %>% 
+  head() %>% 
+  kable()
+```
+
+Use the box plot below to determine if the data meets the homogeneity of variance assumption. 
+
+```{r, echo = FALSE, results = "hide", fig.height = 5, fig.width = 6, fig.path = "", fig.cap = ""}
+dat %>% ggplot(aes(x=catagory,y=value)) +
+  geom_boxplot() +
+  theme(axis.title.x=element_blank(), #remove x axis labels
+        axis.title.y=element_blank()  #remove y axis ticks
+        )
+```
+
+**Hint:**
+
+[Link to Text Book](https://stats.libretexts.org/Bookshelves/Applied_Statistics/Book%3A_Learning_Statistics_with_R_-_A_tutorial_for_Psychology_Students_and_other_Beginners_(Navarro)/14%3A_Comparing_Several_Means_(One-way_ANOVA)/14.08%3A_Checking_the_Homogeneity_of_Variance_Assumption "14.8: Checking the Homogeneity of Variance Assumption"){target="blank"}
+
+Answerlist
+----------
+* The variance of the data appears to be the same across groups; thus, the data meets the homogeneity of variance assumption.
+* The variance of the data appears to be different across groups; thus, the data meets the homogeneity of variance assumption.
+* The variance of the data appears to be the same across groups; thus, the data does not meet the homogeneity of variance assumption.
+* The variance of the data appears to be different across groups; thus, the data does not meet the homogeneity of variance assumption.
+
+Solution
+========
+
+```{r solutionlist, echo = FALSE, results = "asis"}
+answerlist(ifelse(q.solution, "True", "False"), markup = "markdown")
+```
+
+Meta-information
+================
+extype: schoice
+exsolution: `r mchoice2string(q.solution, single = TRUE)`
+exname: anova_results
