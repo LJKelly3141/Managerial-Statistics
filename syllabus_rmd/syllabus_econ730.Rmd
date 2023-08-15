@@ -1,11 +1,11 @@
 ---
-title: "Analytics for Business and Economics"
+title: "Managerial Statistics"
 author: "Dr. Logan J. Kelly"
 knit: (function(inputFile, encoding) {
     rmarkdown::render(inputFile, encoding = encoding, output_dir = "../docs/")
   })
 output:
-  pdf_document: default
+  #pdf_document: default
   html_document:
     css: style.css
 institute: "University of Wisconsin-River Falls"
@@ -19,7 +19,7 @@ short-institute: "UWRF"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-[Printer Friendly Version](https://ljkelly3141.github.io/ABE/syllabus_econ326.pdf)
+[Printer Friendly Version](https://ljkelly3141.github.io/Managerial-Statistics/syllabus_econ730.pdf)
 
 +---------------------------------------------------------------------+--------------------------+
 | # Contact Information                                               | # Office Hours           |
@@ -35,11 +35,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Course Description
 
-The course will examine different data analysis techniques and their many applications. Students will use industry standard data analytics software, such as R and RStudio, to solve business and economics problems. They will also use state of the art tools to analyze data using both visual and statistical techniques.
+This course is will teach students to solve a variety of business problems using advanced statistical techniques for quantitative analysis. Case studies will be used intensively to model the application of statistics in evidenced based decision making. Upon successful completion of this course, students will be able to apply quantitative techniques in a variety of decision-making contexts.
 
 # Prerequisites
 
-A grade of C- or better in (ECON 226 or MATH 226 or equivalent of Introductory Statistics from other areas).
+Admission to the MBA program.
 
 # Technology Requirements
 
@@ -55,26 +55,37 @@ If you need help getting set up for classes, please let me know.
 
 At the end of this course, students will be able to:
 
--   Conduct statistical analysis using industry standard data analytics software, such as R and RStudio
--   Conduct and interpret various hypothesis tests including Chi-Square, Joint Significance and ANOVA
--   Estimate and interpret multivariate regression models
--   Evaluate multivariate regression models
--   Analyze and present data visually
--   Utilize industry standard data analytics software, such as R and RStudio, for pre- and post-processing, i.e. wrangle of data.
+-   collect data from primary and secondary sources.
+-   organize, summarize and present data and quantitative analysis.
+-   apply quantitative techniques in a variety of decision-making contexts.
 
 # Required Text
+
+Class notes provided via Canvas.
+
+# Optional Text
+
+There are two optional text. Both are available free of charge at the following links:
 
 -   Introductory Statistics. Openstax. Barbara Illowsky, et. al. <https://openstax.org/details/books/introductory-statistics>
 
 -   Learning Statistics with R - A tutorial for Psychology Students and other Beginners. Danielle Navarro [https://stats.libretexts.org/\@go/page/3936](https://stats.libretexts.org/@go/page/3936){.uri}
 
-# Exams / Case Studies
+# Lab Assignments
 
-This course is divided into 8 modules. There will be one or two cases covering each modules. You will be able to resubmit each case as many times as you would like up to the the submission cutoff. All cases must be completed by the end of the course.
+You will be assigned weekly lab projects that will apply the statistical technique taught that week. You will be expected to use statistical software to perform the analysis assigned and provide a brief analysis of your results.
 
-# Reading
+# Group Case Assignments
 
-Reading in an online class is even more important than in a traditional class. Just as in a traditional class, you should read each chapter before viewing the lecture video. There also may be material on exams that is covered in the reading, but not covered in the lecture videos.
+You will be divided into groups and assigned case projects that will be completed by the next class meeting. Please bring your laptop to class. You will be expected to use statistical software to perform the analysis assigned and provide a detailed analysis of your results. Your group will be expected to prepare presentation style report of your analysis. You will present one of the cases on the last class period. In class, presentations will be recorded. At the end of the semester you will submit a review of each of your group members performance.
+
+# Individual Case Assignments
+
+You will be assigned a case projects that will be completed by due date specified in class. You will be expected to use statistical software to perform the analysis assigned and provide a detailed analysis of your results. Your group will prepare a written report of your analysis. You will present the case to the class. In class, presentations will be recorded.
+
+# Preparation Expectations
+
+Preparation on your own is extremely important for success in this class. You should expect to spend five to ten hours per week preparing. Regular, short (one hour or less) study sessions will improve your performance dramatically, while waiting to study until the last minute will greatly increase the likelihood of receiving a poor grade.
 
 # Online Office Hours and Communication
 
@@ -91,17 +102,17 @@ To schedule, an appointment with me use this link: <http://tiny.cc/DrKelly>
 
 # Synchronous Class Meetings
 
-This class will meet synchronously on Zoom. Synchronous class meetings can be found at <https://tiny.cc/ECON326-LEC>. The password is 326326.
+This class will meet synchronously on Zoom. Synchronous class meetings can be found at <https://tiny.cc/ECON730-LEC>. The password is 730730.
 
 # Grading
 
 Your grade will be determined by calculating the weighted average of your chapter quizzes and your exam scores. The weights are as follows:
 
-|                 |     |
-|-----------------|----:|
-| Case Studies    | 90% |
-| Tasks           |  5% |
-| Wrap-up Quizzes |  5% |
+|                         |     |
+|-------------------------|----:|
+| Individual Case Studies | 30% |
+| Group Case Studies      | 40% |
+| Ethics Case             | 20% |
 
 Letter Grades will be assigned as follows:
 
@@ -116,6 +127,12 @@ Letter Grades will be assigned as follows:
 
 This scale may be adjusted at the end of the semester. If your grade is a borderline case (within 1% of the next highest letter grade), participation will be used to determine whether you will receive the higher grade.
 
+# Visitors
+
+Only students registered in the class may be in the classroom. Academic visitors, including peer observers and prospective students visiting campus, may be admitted with advance permission from the instructor.
+
+Note that "Zoom-bombing" kids, pets, etc. are expected and welcome.
+
 # Students with disabilities
 
 Any student in this course who has a disability that prevents the fullest expression of abilities should contact me personally as soon as possible so that we can discuss class requirements and accommodations. The University of Wisconsin-River Falls welcomes students with disabilities into its educational programs, activities, residential halls, and everything else it offers. Those who will need academic adjustments or accommodations for a disability should contact the Disability Services Office (105 Davee Library; 715-425-3531). Before final decisions can be made to allow academic adjustments and accommodations students must provide documentation that sufficiently indicates the nature of their situation. Additional information is available at <http://www.uwrf.edu/disabilityservices/ADA.html>.
@@ -123,3 +140,4 @@ Any student in this course who has a disability that prevents the fullest expres
 # Academic Misconduct
 
 The university has a responsibility to promote academic honesty and integrity and to develop procedures to deal effectively with instances of academic dishonesty. Students are responsible for the honest completion and representation of their work, for the appropriate citation of sources, and for respect of others' academic endeavors. A more detailed description of Student Academic Disciplinary Procedures may be found in Regents Policy Statements, UWS Chapter 14.
+
