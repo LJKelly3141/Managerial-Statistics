@@ -29,9 +29,9 @@ tutorial::go_interactive(greedy = F, height = 600)
 
 To complete this case, use the link to the RStudio Cloud Project below. Within that project, you will find an RMarkdown file named CaseXX.Rmd, where "XX" will be replaced by the current case number. Open this file and follow the directions therein. Once you have completed the case, knit the RMarkdown file to an MS Word document. Submit the knitted docx file below. 
 
-To access the case project, you need to join the class workspace if you have not done so already: [http://tiny.cc/ECON326-WORKSPACE](http://tiny.cc/ECON326-WORKSPACE){target=_blank}.
+To access the case project, you need to join the class workspace if you have not done so already: [http://tiny.cc/ECON730-ASSIGNMENT](http://tiny.cc/ECON730-ASSIGNMENT){target=_blank}.
 
-The case is accessible via this [RStudio Cloud Project](https://rstudio.cloud/spaces/245665/project/3375543){target=_blank}.
+The case is accessible via this [RStudio Cloud Project](https://posit.cloud/spaces/404391/content/6370457){target=_blank}.
 
 ### Part 1.Basic commands.
 
