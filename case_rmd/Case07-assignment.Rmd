@@ -1,0 +1,110 @@
+---
+knit: (function(inputFile, encoding) {
+    rmarkdown::render(inputFile, encoding = encoding, output_dir = "../docs/")
+  })
+output: html_document
+institute: "University of Wisconsin-River Falls"
+department: "College of Business and Economics"
+short-author: "Kelly"
+short-date: ''
+short-institute: "UWRF"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval=FALSE)
+
+if(!require(devtools)) {
+  install.packages("devtools")
+}
+if(!require(tutorial)) {
+  devtools::install_github("datacamp/tutorial")
+  library(tutorial)
+}
+
+tutorial::go_interactive(greedy = F, height = 600)
+```
+
+
+## In this case, we will practice model building and evaluation
+
+To complete this case, use the link to the RStudio Cloud Project below. Within that project, you will find an RMarkdown file named CaseXX.Rmd, where "XX" will be replaced by the current case number. Open this file and follow the directions therein. Once you have completed the case, knit the RMarkdown file to an MS Word document. Submit the knitted docx file below. 
+
+To access the case project, you need to join the class workspace if you have not done so already: [http://tiny.cc/ECON326-WORKSPACE](http://tiny.cc/ECON326-WORKSPACE){target=_blank}.
+
+The case is accessible via this [RStudio Cloud Project](https://rstudio.cloud/spaces/245665/content/3378234){target=_blank}.
+
+### 1. Anouther look at COVID-19 data.
+
+A. As you did in case 5, load and prepare the data. Note that `one.dose` is the percentage of the population with at least one dose of the a COVID-19 vaccine and `state.control` indicates party in control of the state. Be sure to make `state.control` a factor.
+
+B. Use the `aggregate()` and `aov()` functions to calculate the average percent of the population with at least one dose of a COVID-19 vaccine by party controlling the state.
+
+C. Estimate the ANOVA from part B using regression
+
+1.  Estimate the ANOVA from part B using regression, i.e. `aov.regression <- lm(one.dose ~ state.control, data = vacs)`. Compare the F-stat and p-value from both the the linear model and the ANOVA (hint: they are the same!).
+
+2.  Find the averages by state control by adding the regression coefficients, i.e.
+
+```{r eval = F}
+beta <- aov.regression$coefficients
+averages <- c("dem" = beta[1],"devided" = beta[1] + beta[2],"rep" = beta[1] + beta[3])
+averages
+```
+
+3.  Compare the averages calculated using linear regression to those calculated in 1.B.
+
+[YOUR WRITTEN RESPONSE HERE]
+
+### 2. Analysis of parent sleep and mood
+
+A. Load the parenthood data set and calculate descriptive statistics.
+
+B. Estimate a regression model that uses `dan.sleep` and `baby.sleep` to predict `dan.grump`
+
+C. Check normality of the residuals.
+
+1. Use `hist()` and `resid()` functions to plot a histogram of the residuals.
+
+2. Use `shapiro.test()` and `resid()` functions to conduct the Shapiro-Wilk Normality Test of the residuals.
+
+3. State your conclusion regarding the normality of the residuals.
+
+State your conclusion about the normality of the residuals.
+
+D. Check Linearity.
+
+1. Use the `plot()` function to draw scatter plots of each independent variable vs the dependent variable
+
+2. Use the `plot()` and `fitted()` functions to draw a scatter plot of fitted vs. actual values of `dan.grump`.
+
+3. Use `abline(b=1,a=0)` to add the fitted = actual line to the scatter plot of fitted vs. actual values.
+
+4. State your conclusion regarding linearity.
+
+E. Check homogeneity of variance.
+
+1. Plot the residual vs fitted values scatter plot.
+
+2. Use `abline(h=0)` to add a zero line to the residual vs fitted scatter plot.
+
+3. Load the lmtest package, i.e. `pacman::p_load("lmtest")`
+
+4. Use the `bptest()` function to test for heteroskedasticity.
+
+5. State your conclusion regarding homogeneity of variance.
+
+F. Check for colinearity of predictors.
+
+1. Load the psych package, i.e.`pacman::p_load("psych")`
+
+2. Use the `pairs.panels()` to examine correlation between variables in the `parenthood` data frame.
+
+3. Load the car package, i.e. `pacman::p_load("car")`
+
+4. Use the `vif()` function to estimate the variance inflation factors.
+
+5. State your conclusion regarding colinearity of predictors.
+
+G. Use `bgtest()` to test for serial correlation.
+
+H. Use the `boxplot()` and `resid()` functions to check for "bad" outliers, and state you conclusion regarding outliers.

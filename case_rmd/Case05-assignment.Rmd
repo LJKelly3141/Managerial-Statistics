@@ -1,0 +1,79 @@
+---
+knit: (function(inputFile, encoding) {
+    rmarkdown::render(inputFile, encoding = encoding, output_dir = "../docs/")
+  })
+output: html_document
+institute: "University of Wisconsin-River Falls"
+department: "College of Business and Economics"
+short-author: "Kelly"
+short-date: ''
+short-institute: "UWRF"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval=FALSE)
+
+if(!require(devtools)) {
+  install.packages("devtools")
+}
+if(!require(tutorial)) {
+  devtools::install_github("datacamp/tutorial")
+  library(tutorial)
+}
+
+tutorial::go_interactive(greedy = F, height = 600)
+```
+
+
+## In this case, we will practice ANOVA
+
+To complete this case, use the link to the RStudio Cloud Project below. Within that project, you will find an RMarkdown file named CaseXX.Rmd, where "XX" will be replaced by the current case number. Open this file and follow the directions therein. Once you have completed the case, knit the RMarkdown file to an MS Word document. Submit the knitted docx file below. 
+
+To access the case project, you need to join the class workspace if you have not done so already: [http://tiny.cc/ECON326-WORKSPACE](http://tiny.cc/ECON326-WORKSPACE){target=_blank}.
+
+The case is accessible via this [RStudio Cloud Project](https://rstudio.cloud/spaces/245665/content/3375741){target=_blank}.
+
+You will use data on COVID-19 vaccination rates to analyse the impact of political party control on state level vaccination rates.
+
+### 1. Load and prepare the data.
+
+Load the data from <data/vaccinations.csv> into a data frame called `vacs`. Note that `one.dose` is the percentage of the population with at least one dose of the a COVID-19 vaccine and `state.control` indicates party in control of the state. Be sure to make `state.control` a factor.
+
+### 2. Estimate the ANOVA model
+
+A. Use the `aggregate()` and `aov()` functions to calculate the average percent of the population with at least one dose of the a COVID-19 vaccine by party controlling the state, i.e. 
+
+```{r, eval = FALSE}
+aggregate(one.dose ~ state.control, data=vacs, FUN=mean)
+one.dose.aov <- aov(one.dose ~ state.control, data=vacs)
+```
+
+Don't forget to use the `summary()` command to see the results of the ANOVA.
+
+B. What conclusion can you make about the impact of political party on vaccination rates?
+
+### 3. Check the homogeneity of variance assumption
+
+A. Check the homogeneity of variance assumption and run the Welch One-way Test. Make sure to load the `car` package, i.e. `pacman::p_load("car")`. 
+
+1. Plot a boxplot of `one.dose` using `boxplot()`
+2. Conduct the Levene Test using `leveneTest()`
+3. Conduct the Welch one-way test using `oneway.test()`
+
+B. Dose the data exhibit homogeneity of variance? What is you conclusion from the Welch One-way Test?
+
+
+### 4. Check the normality of residuals assumption.
+
+A. Check the normality of residuals assumption. You need to do the following: 
+
+1. Plot a histogram of the residuals using `hist()`
+2. Plot the Normal Q-Q Plot using `qqnorm()`
+3. Conduct the Shapiro Test using `shapiro.test()`
+4. Conduct the Kruskal-Wallis test using `kruskal.test()`
+
+B. Dose the data exhibit normally distributed residual? What is you conclusion from the Kruskal-Wallis test?
+
+### 5. Conclution
+
+You have conducted a standard ANOVA test, the Welch One-way Test, and the Kruskal-Wallis test. Based on your analysis, which test is most appropriate for this data?

@@ -1,0 +1,129 @@
+---
+knit: (function(inputFile, encoding) {
+    rmarkdown::render(inputFile, encoding = encoding, output_dir = "../docs/")
+  })
+output: html_document
+institute: "University of Wisconsin-River Falls"
+department: "College of Business and Economics"
+short-author: "Kelly"
+short-date: ''
+short-institute: "UWRF"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval=FALSE)
+
+if(!require(devtools)) {
+  install.packages("devtools")
+}
+if(!require(tutorial)) {
+  devtools::install_github("datacamp/tutorial")
+  library(tutorial)
+}
+
+tutorial::go_interactive(greedy = F, height = 600)
+```
+
+
+## In this case, we will practice working with data
+
+To complete this case, use the link to the RStudio Cloud Project below. Within that project, you will find an RMarkdown file named CaseXX.Rmd, where "XX" will be replaced by the current case number. Open this file and follow the directions therein. Once you have completed the case, knit the RMarkdown file to an MS Word document. Submit the knitted docx file below. 
+
+To access the case project, you need to join the class workspace if you have not done so already: [http://tiny.cc/ECON326-WORKSPACE](http://tiny.cc/ECON326-WORKSPACE){target=_blank}.
+
+The case is accessible via this [RStudio Cloud Project](https://rstudio.cloud/spaces/245665/project/3375547){target=_blank}.
+
+### 1. Load packages
+
+A. Install the `pacman` package. In the console (the lower left quadrant of RStudio), use the following command to install the pacman package.
+
+```{r}
+install.packages("pacman")
+```
+
+
+B. Use the pacman package to install the tidyverse and psych packages, i.e.
+
+```{r}
+pacman::p_load("tidyverse","psych")
+```
+
+There is no need to turn anything in for this question, i.e. question 1.A and 1.B. You will not be able to proceed with the case if you have not completed this part correctly.
+
+
+### 2. Load, View and Summerize Data
+
+A. Load the data from cholesterol.csv. The data in cholesterol.csv is from a study testing whether cholesterol was reduced after using a certain brand of margarine as part of a low fat, low cholesterol diet. The subjects consumed on average 2.31g of the active ingredient, stanol easter, a day. This data set contains information on 18 people using margarine to reduce cholesterol over three time points.
+
+| **Variable name** | **Variable**                                   |
+|-------------------|------------------------------------------------|
+| ID                | Participant number                             |
+| Before            | Cholesterol before the diet (mmol/L)           |
+| After4weeks       | Cholesterol after 4 weeks on the diet (mmol/L) |
+| After8weeks       | Cholesterol after 8 weeks on the diet (mmol/L) |
+| Margarine         | Margarine type A or B                          |
+
+For this part, complete the following steps:
+
+1. Use the `read.csv()` function to load the cholesterol.csv file, i.e. 
+
+```{r}
+cholesterol <- read.csv("cholesterol.csv")
+```
+
+(Note that cholesterol.csv has already been uploaded to the project folder).
+
+2. Use the `head()` function to look at the first few rows of the data frame, i.e.
+
+```{r}
+head(cholesterol)
+```
+
+3. Use the `plot()` function to draw scatter plots of the the data in the data frame, i.e.
+
+```{r}
+plot(cholesterol)
+```
+
+B. Save the cholesterol data frame as an Rdata file. Use the `save()` function to save the cholesterol data frame as cholesterol.Rdata, i.e.
+
+```{r}
+save(cholesterol, file = "cholesterol.Rdata")
+```
+
+### 3. Describe the data set
+
+A. Convert the variable Margarine to a factor.
+
+1. Use the `as.factor()` function to convert Margarine to a factor variable, i.e.
+
+```{r}
+cholesterol$Margarine <- as.factor(cholesterol$Margarine)
+```
+
+2. Use the `head()` function to display the first few rows of the data frame, i.e. 
+
+```{r}
+head(cholesterol)
+```
+
+
+
+B. Calculate summary statistics of the cholesterol data. Use the `describe()` function to calculate summary statistics of the cholesterol data. Set skew and ranges to false, i.e.
+
+```{r}
+describe(x = cholesterol, skew = F, ranges = F)
+```
+
+
+C. Create a formula to calculate average cholesterol reduction after eight weeks, i.e.
+
+```{r}
+EightWeeksByType <- After8weeks ~ Margarine
+```
+
+D. Calculate summary statistics for cholesterol reduction after eight weeks by margarine type using the formula you created in the previous question, i.e.
+
+```{r}
+describe(EightWeeksByType, data = cholesterol, skew = F, ranges = F)
+```
