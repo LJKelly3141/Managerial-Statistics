@@ -14,27 +14,18 @@ short-institute: "UWRF"
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-
-if(!require(devtools)) {
-  install.packages("devtools")
-}
-if(!require(tutorial)) {
-  devtools::install_github("datacamp/tutorial")
-  library(tutorial)
-}
-
-tutorial::go_interactive(greedy = F, height = 600)
 ```
 
 ## Welcome to class!
 
-Welcome to Analytics for Business and Economics. I am looking forward to learning statistics with you. This is the TLDR for the class. Here I will set out some of the expectations for the class and a few class policies. You should also read the class syllabus, see the next page.
+Welcome to Managerial Statistics. I am looking forward to learning statistics with you. This is the TLDR for the class. Here I will set out some of the expectations for the class and a few class policies. You should also read the class syllabus, see the next page.
 
 ## Key points about this class:
 
--   This course is scheduled for the winter term. It will run from 12/27/2022 - 01/20/2023. **All work must be completed by 01/20/2023.**
+-   This course is scheduled for session A of Fall 2023. It will run from 09/06/2023 - 10/24/2023. **All work must be completed by 10/24/2023.**
 -   Lecture videos will be published each week of the class.
 -   I will meet with you for one-on-one help sessions via zoom. To schedule an appointment with me, use this link: <a href="http://tiny.cc/DrKelly" target="_blank">http://tiny.cc/DrKelly</a>
+-   Synchronous class meetings will be held via Zoom at <http://tiny.cc/ECON730-LEC>
 
 
 ## Before class you should do the following:
@@ -43,7 +34,9 @@ Welcome to Analytics for Business and Economics. I am looking forward to learnin
 -   Test your audio and video setup by running a [Zoom meeting test](https://zoom.us/test){target="_blank"}.
 -   Register for a free R Studio Cloud account. Register here: [https://rstudio.cloud/plans/free](https://rstudio.cloud/plans/free){target="_blank"}.
 -   Read all the emails I send you!
--   Join the RStudio.Cloud class workspace using this link: [RStudio.Cloud Workspace](http://tiny.cc/ECON326-WORKSPACE "ECON326-WORKSPACE"){target="_blank"}.
+-   Join the RStudio.Cloud class workspace using this link: [RStudio.Cloud Workspace](http://tiny.cc/ECON730-WORKSPACE "ECON730-WORKSPACE"){target="_blank"}.
+-   You should also review the meaterials in modeles " Week 1 Part 1. Intro to R, RStudio and Posit.Cloud" and "Week 1 Part 2. Intro to R, RStudio and Posit.Cloud"
+
 
 ## Technology Requirements
 
