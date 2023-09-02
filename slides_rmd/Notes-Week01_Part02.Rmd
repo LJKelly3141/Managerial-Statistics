@@ -289,28 +289,13 @@ ggcorrplot(cor_matrix,
    We can predict absenteeism hours based on other attributes using regression analysis.
    
 ```{r}
-filtered_data <- filtered_data %>% 
-  select(-ID, -Reason.for.absence) %>% 
-  mutate(Month.of.absence = as.factor(Month.of.absence),
-         Day.of.the.week =
-           as.factor(Day.of.the.week),
-         Seasons =
-           as.factor(Seasons),
-         Disciplinary.failure = as.factor(Disciplinary.failure),
-         Education = as.factor(Education),
-         Son = as.factor(Son),
-         Social.drinker = as.factor(Social.drinker),
-         Social.smoker = as.factor(Social.smoker),
-         Pet = as.factor(Pet))
-model <- lm(Absenteeism.time.in.hours ~ ., data=filtered_data)
+model <- lm(avg_absences ~ Month.of.absence, data=monthly_absenteeism_summary_no_outliers)
+summary(model)
 ```
 
    This linear regression model aims to predict absenteeism hours using all other variables in the cleaned dataset. The `summary` function then provides detailed results, including coefficients, R-squared values, and significance levels.
    
-```{r}
-model_final <- step(model,trace = 0)
-summary(model_final)
-```
+
 ### Visualization of Monthly Absenteeism without Outliers
 
 ```{r}
