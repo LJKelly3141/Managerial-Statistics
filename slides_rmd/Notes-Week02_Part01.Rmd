@@ -1,0 +1,108 @@
+---
+knit: (function(inputFile, encoding) {
+    rmarkdown::render(inputFile, encoding = encoding, output_dir = "../docs/")
+  })
+institute: "University of Wisconsin-River Falls"
+department: "College of Business and Economics"
+short-author: "Kelly"
+short-date: ''
+short-institute: "UWRF"
+output: 
+  html_document:
+    code_download: true
+    css: style.css
+---
+
+# Case Study: Chi-Squared Goodness of Fit Test
+
+## Introduction
+
+This case study explores the application of the chi-squared goodness of fit test on data sourced from the direct marketing campaigns of a Portuguese banking institution.
+
+**Data Source**: [Bank Market Data](https://ljkelly3141.github.io/ABE-Book/data/bank-full.csv) provided by S. Moro, P. Cortez, and P. Rita (2014)[^20-chi_square-1].
+
+### Case Background
+
+- Objective: Verify if the bank's client job distribution mirrors the general job distribution in society.
+- Importance: Reflects the diversity and appeal of the bank's services.
+
+### Data Description
+
+Variables of focus from the dataset:
+
+| Variable  | Description                      |
+|-----------|----------------------------------|
+| age       | Age of the client                |
+| job       | Type of job                      |
+| marital   | Marital status                   |
+| education | Level of education               |
+| default   | Has credit in default?           |
+| balance   | Average yearly balance, in euros |
+| ...       | ...                              |
+
+- The 'job' variable is categorical with 12 categories.
+
+## **Step 1: Load the Data and Inspect the 'job' Variable**
+
+```{r}
+# Load Packages
+pacman::p_load("tidyverse")
+
+# Load the dataset
+bank <- read.csv("https://ljkelly3141.github.io/ABE-Book/data/bank-full.csv", sep = ';')
+
+# Examine 'job' distribution
+job.table <- table(bank$job)
+as.data.frame(job.table) %>% 
+  rename("Job Categories" = "Var1") 
+```
+
+## **Step 2: Hypotheses Formulation**
+
+- Null hypothesis ($H_0$): Observed job distribution = Expected job distribution
+- Alternate hypothesis ($H_a$): Observed job distribution ≠ Expected job distribution
+
+Mathematically:
+
+- $H_0$: All proportions $p_i = 1/k$
+- $H_a$: At least one proportion $p_i \not= 1/k$
+
+## **Step 3: Expected Frequencies and Degrees of Freedom**
+
+1. Determine number of job categories:
+   
+```{r}
+n.categories <- length(job.table)
+n.categories
+```
+
+2. Compute expected count for each job category:
+
+```{r}
+expected.counts <- c(4521, 11303, 1356, 1356, 9042, 2261, 1356, 4521, 904, 6782, 1356, 453)
+names(expected.counts) <- names(job.table)
+```
+
+## **Step 4: Calculate the Chi-Square Statistic**
+
+```{r}
+observed.counts <- table(bank$job)
+chi.sq <- sum((observed.counts - expected.counts)^2 / expected.counts)
+chi.sq
+```
+
+## **Step 5: Determine the P-value**
+
+```{r}
+p.value <- pchisq(chi.sq, df = n.categories - 1, lower.tail = FALSE)
+p.value
+```
+
+## **Step 6: Result Interpretation**
+
+Given the p-value, if it's less than a significance level (e.g., 0.05), then we reject $H_0$. This would indicate that the bank's client job distribution does not reflect the expected distribution.
+
+## References
+
+[^20-chi_square-1]: Moro, S., Cortez, P., & Rita, P. (2014). A Data-Driven Approach to Predict the Success of Bank Telemarketing. Decision Support Systems, Elsevier, 62:22-31. Retrieved from [https://archive.ics.uci.edu/ml/datasets/bank+marketing](https://archive.ics.uci.edu/ml/datasets/bank+marketing)
+
