@@ -31,10 +31,14 @@ This study examines the relationship between a client's job type and possession 
    - Use the provided link to download and load the data.
    - Examine the distribution of the `job` and `housing` variables.
 ```{r}
+# Load Packages
+pacman::p_load("tidyverse","vcd")
 # Loading the dataset
 bank <- read.csv("https://ljkelly3141.github.io/ABE-Book/data/bank-full.csv", sep = ";")
 # Distribution check
 table(bank$job, bank$housing) %>% knitr::kable()
+# Using vcd package for mosaic plot
+mosaic(~ job + housing, data = bank, shade=TRUE, legend=TRUE)
 ```
    
 2. **Formulate a Hypothesis**
