@@ -49,12 +49,15 @@ Variables of focus from the dataset:
 pacman::p_load("tidyverse")
 
 # Load the dataset
-bank <- read.csv("https://ljkelly3141.github.io/ABE-Book/data/bank-full.csv", sep = ';')
+bank <- 
+  read.csv("https://ljkelly3141.github.io/ABE-Book/data/bank-full.csv", 
+           sep = ';')
 
 # Examine 'job' distribution
 job.table <- table(bank$job)
 as.data.frame(job.table) %>% 
   rename("Job Categories" = "Var1") 
+
 ```
 
 ## **Step 2: Hypotheses Formulation**
@@ -62,10 +65,25 @@ as.data.frame(job.table) %>%
 - Null hypothesis ($H_0$): Observed job distribution = Expected job distribution
 - Alternate hypothesis ($H_a$): Observed job distribution ≠ Expected job distribution
 
-Mathematically:
+The observed and expected job distribution is 
 
-- $H_0$: All proportions $p_i = 1/k$
-- $H_a$: At least one proportion $p_i \not= 1/k$
+```{r}
+freq <-data.frame(category = names(job.table),
+                  expected.frequency = c(4521, 11303, 1356, 1356, 9042, 2261, 1356, 4521, 904, 6782, 1356, 453)
+                  )
+freq$expected.frequency <- freq$expected.frequency/sum(freq$expected.frequency)
+freq$observed.frequency <- as.data.frame(job.table)$Freq/sum(job.table)
+
+freq
+
+freq %>% 
+  mutate(category = fct_reorder(category, .$expected.frequency) ) %>% 
+  pivot_longer(-category) %>% 
+  ggplot(aes(x = category, y = value, fill = name)) +
+  geom_col(position = "dodge") +
+  labs(title = "Observed vs. Expected Frequency", y = "Frequency") +
+  coord_flip()
+```
 
 ## **Step 3: Expected Frequencies and Degrees of Freedom**
 
@@ -79,8 +97,9 @@ n.categories
 2. Compute expected count for each job category:
 
 ```{r}
-expected.counts <- c(4521, 11303, 1356, 1356, 9042, 2261, 1356, 4521, 904, 6782, 1356, 453)
+expected.counts <- freq$expected.frequency * sum(job.table)
 names(expected.counts) <- names(job.table)
+expected.counts %>% as.data.frame()
 ```
 
 ## **Step 4: Calculate the Chi-Square Statistic**
@@ -101,6 +120,12 @@ p.value
 ## **Step 6: Result Interpretation**
 
 Given the p-value, if it's less than a significance level (e.g., 0.05), then we reject $H_0$. This would indicate that the bank's client job distribution does not reflect the expected distribution.
+
+## **Step 7: How to do this in practice**
+
+```{r}
+chisq.test(job.table,p=freq$expected.frequency)
+```
 
 ## References
 

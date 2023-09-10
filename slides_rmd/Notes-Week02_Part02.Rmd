@@ -1,0 +1,68 @@
+---
+knit: (function(inputFile, encoding) {
+    rmarkdown::render(inputFile, encoding = encoding, output_dir = "../docs/")
+  })
+institute: "University of Wisconsin-River Falls"
+department: "College of Business and Economics"
+short-author: "Kelly"
+short-date: ''
+short-institute: "UWRF"
+output: 
+  html_document:
+    code_download: true
+    css: style.css
+---
+
+# Case Study: Chi-Squared Test of Independence with Banking Data
+
+## Introduction
+
+This study examines the relationship between a client's job type and possession of a housing loan using a chi-squared test of independence.
+
+**Data Source**: [Bank Market Data](https://ljkelly3141.github.io/ABE-Book/data/bank-full.csv) provided by S. Moro, P. Cortez, and P. Rita (2014)[^20-chi_square-1].
+
+**Objective**: Investigate if the `job` type of a client informs us about their likelihood of having a housing loan.
+
+**Variables of Interest**:
+  - `job`: Type of job.
+  - `housing`: Possession of housing loan (yes/no).
+
+1. **Load the Data & Visualize with Mosaic Plot**
+   - Use the provided link to download and load the data.
+   - Examine the distribution of the `job` and `housing` variables.
+```{r}
+# Loading the dataset
+bank <- read.csv("https://ljkelly3141.github.io/ABE-Book/data/bank-full.csv", sep = ";")
+# Distribution check
+table(bank$job, bank$housing) %>% knitr::kable()
+```
+   
+2. **Formulate a Hypothesis**
+   - **Null hypothesis** ($H_0$): `job` and `housing` are independent.
+   - **Alternate hypothesis** ($H_a$): `job` and `housing` are dependent.
+
+3. **Conduct the Chi-Squared Test of Independence**
+   - Use the `table` function to form a cross tabulation of `job` and `housing`.
+```{r}
+cross.tab <- table(bank$job, bank$housing)
+cross.tab
+```
+   - Implement the chi-squared test using `chisq.test()` in R.
+```{r}
+chisq.stat <- chisq.test(cross.tab)
+chisq.stat
+```
+
+4. **Interpret the Result**
+   - If the p-value < $alpha$, reject $H_0$.
+   - In this study, due to a very small p-value, $H_0$ is rejected.
+   - **Conclusion**: `job` and `housing` variables are dependent.
+
+#### **Final Thoughts**
+- The findings suggest certain job categories might be more or less likely to have housing loans.
+- Such insights can be valuable for targeted marketing strategies.
+
+## References
+
+[^20-chi_square-1]: Moro, S., Cortez, P., & Rita, P. (2014). A Data-Driven Approach to Predict the Success of Bank Telemarketing. Decision Support Systems, Elsevier, 62:22-31. Retrieved from [https://archive.ics.uci.edu/ml/datasets/bank+marketing](https://archive.ics.uci.edu/ml/datasets/bank+marketing)
+
