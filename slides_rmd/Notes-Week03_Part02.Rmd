@@ -13,11 +13,7 @@ output:
     css: style.css
 ---
 
-# Case Study: Certainly! Here's a version of your content, formatted in RMarkdown with bullet points, designed as lecture notes:
-
----
-
-# Test in E-Commerce Data (Checking our assumptions)
+# Case Study: Test in E-Commerce Data (Checking our assumptions)
 
 In this session, we dive deeper into the Online Retail II data set from the UCI Machine Learning Repository. The core objective? Understand if the quantity of products purchased varies across countries, and then ascertain the validity of our conclusions.
 
@@ -25,6 +21,14 @@ In this session, we dive deeper into the Online Retail II data set from the UCI 
 
 - **Load and Clean Data**
   - As in our previous discussions, we start by preparing our dataset.
+  
+```{r}
+pacman::p_load("tidyverse")
+data_final <- "https://ljkelly3141.github.io/ABE-Book/data/online_retail_II.RData" %>% 
+  url() %>% 
+  load()
+```
+  
 
 - **Objective**
   - Use ANOVA to probe: "Is there a significant difference in the quantity of products purchased across different countries?" 
