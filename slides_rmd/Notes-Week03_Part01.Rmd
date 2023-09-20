@@ -85,7 +85,7 @@ data_final <- data_clean %>%
   distinct(Invoice, .keep_all = TRUE) %>%
   select(Invoice,InvoiceDate,InvoiceTotal,Country)
 
-save(data_final, file = "../docs/data/online_retail_II.Rdata")
+write.csv(data_final, file = "../docs/data/online_retail_II.csv")
 ```
 
 ## Performing the ANOVA Test Manually
