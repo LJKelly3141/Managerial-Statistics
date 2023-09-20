@@ -84,8 +84,6 @@ data_final <- data_clean %>%
   mutate(InvoiceTotal = sum(TransTotal)) %>%
   distinct(Invoice, .keep_all = TRUE) %>%
   select(Invoice,InvoiceDate,InvoiceTotal,Country)
-
-write.csv(data_final, file = "../docs/data/online_retail_II.csv")
 ```
 
 ## Performing the ANOVA Test Manually
@@ -177,3 +175,10 @@ p.value <- pf( F.stat, df1 = DF.b, df2 = DF.w, lower.tail = FALSE)
 ## Conclusion
 
 - The ANOVA results show a significant difference between invoice totals across countries.
+
+## Save the data for the next case
+
+```{r}
+write.csv(data_final, file = "../docs/data/online_retail_final.csv")
+```
+

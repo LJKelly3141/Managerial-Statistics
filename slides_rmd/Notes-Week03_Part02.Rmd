@@ -24,9 +24,7 @@ In this session, we dive deeper into the Online Retail II data set from the UCI 
   
 ```{r}
 pacman::p_load("tidyverse")
-data_final <- "https://ljkelly3141.github.io/ABE-Book/data/online_retail_II.RData" %>% 
-  url() %>% 
-  load()
+data_final <- read.csv("https://ljkelly3141.github.io/ABE-Book/data/online_retail_II.csv")
 ```
   
 
