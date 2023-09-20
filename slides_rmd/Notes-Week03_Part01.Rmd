@@ -1,0 +1,177 @@
+---
+knit: (function(inputFile, encoding) {
+    rmarkdown::render(inputFile, encoding = encoding, output_dir = "../docs/")
+  })
+institute: "University of Wisconsin-River Falls"
+department: "College of Business and Economics"
+short-author: "Kelly"
+short-date: ''
+short-institute: "UWRF"
+output: 
+  html_document:
+    code_download: true
+    css: style.css
+---
+
+# Case Study: *Online Retail II data set
+
+- This study involves the **Online Retail II data set** from the UCI Machine Learning Repository.
+- The dataset contains transactions for a UK-based online retail between 01/12/2009 and 09/12/2011.
+- **Key Question**: Is there a significant difference in the average transaction amount across different countries?
+
+## Objective
+
+- Conduct an ANOVA to determine the difference in the quantity of products purchased across various countries.
+- We aim to manually compute ANOVA without using the built-in `anova()` function.
+
+## Loading Necessary Packages
+
+- Main package for data manipulation: `dplyr`
+- It is part of the `tidyverse` collection.
+
+```{r setup, include=FALSE}
+pacman::p_load(tidyverse,openxlsx,readxl)
+```
+
+## Description of the Data
+
+- The dataset can be loaded and its initial rows visualized using:
+
+```{r load_data}
+data <- read.xlsx("https://ljkelly3141.github.io/ABE-Book/data/online_retail_II.xlsx")
+head(data)
+```
+
+### Variables
+
+- `InvoiceNo`: Unique 6-digit number for each transaction.
+- `StockCode`: Unique 5-digit product code.
+- `Description`: Product name.
+- `Quantity`: Quantity of product per transaction.
+- `InvoiceDate`: Date and time of the transaction.
+- `UnitPrice`: Product price per unit (£).
+- `CustomerID`: Unique 5-digit customer identifier.
+- `Country`: Name of the country of the customer.
+
+## Data Cleaning
+
+### Step 1: Remove missing values
+- The code removes rows with missing values in 'CustomerID' and 'Description'.
+
+```{r step1}
+data_clean <- data %>%
+  filter(!is.na(Customer.ID)) %>%
+  filter(!is.na(Description))
+```
+
+### Step 2: Filter for positive quantities and prices
+- Ensure 'Quantity' and 'UnitPrice' are positive.
+
+```{r step2}
+data_clean <- data_clean %>%
+  filter(Quantity > 0) %>%
+  filter(Price > 0)
+```
+
+### Step 3: Calculate Total Amount of each Invoice
+
+- Compute the total transaction amount and prepare the data.
+
+```{r step3}
+data_final <- data_clean %>%
+  mutate(TransTotal = Price * Quantity) %>%
+  group_by(Invoice) %>%
+  mutate(InvoiceTotal = sum(TransTotal)) %>%
+  distinct(Invoice, .keep_all = TRUE) %>%
+  select(Invoice,InvoiceDate,InvoiceTotal,Country)
+```
+
+## Performing the ANOVA Test Manually
+
+### Step 1: Calculate means
+- Get country-wise invoice count and average.
+
+```{r anova_step1}
+country.summary <- data_final %>% 
+  group_by(Country) %>% 
+  summarise(CountryCount = n(),
+            CountryMean = mean(InvoiceTotal)) %>% 
+  arrange(desc(CountryCount))
+```
+
+- Overall mean:
+
+\[ \bar{Y} = \frac{1}{N} \sum_{i=1}^{N} Y_i \]
+
+```{r overall_mean}
+overall_mean <- mean(data_final$InvoiceTotal)
+```
+
+### Step 2: Total Sum of Squares
+
+\[ SS_{\text{tot}} = \sum_{i=1}^{N} (Y_i - \bar{Y})^2 \]
+
+```{r ss_tot}
+SS.tot <- sum((data_final$InvoiceTotal-overall_mean)^2)
+```
+
+### Step 3: Within-group sum of squares
+
+\[ SS_w = \sum_{k=1}^{G} \sum_{i=1}^{N_k} (Y_{ik} - \bar{Y}_k)^2 \]
+
+```{r ss_w}
+data_final <- data_final %>% 
+  group_by(Country) %>% 
+  mutate(CountryMean = mean(InvoiceTotal)) %>% 
+  ungroup()
+
+SS.w <- sum((data_final$InvoiceTotal - data_final$CountryMean)^2)
+```
+
+### Step 4: Between-group sum of squares
+
+\[ SS_b = \sum_{k=1}^{G} \sum_{i=1}^{N_k} (\bar{Y}_k - \bar{Y})^2 \]
+
+```{r ss_b}
+SS.b <- sum((data_final$CountryMean - overall_mean)^2)
+```
+
+### Step 5: Degrees of freedom
+
+\[ DF_w = N - G \]
+\[ DF_b = G - 1 \]
+
+```{r df}
+DF.w <- nrow(data_final)-nrow(country.summary)
+DF.b <- nrow(country.summary)-1
+```
+
+### Step 6: Mean squares value
+
+\[ MS_w = \frac{SS_w}{DF_w} \]
+\[ MS_b = \frac{SS_b}{DF_b} \]
+
+```{r ms}
+MS.w <- SS.w/DF.w
+MS.b <- SS.b/DF.b
+```
+
+### Step 7: F-Stat
+
+\[ F_{\text{stat}} = \frac{MS_b}{MS_w} \]
+
+```{r f_stat}
+F.stat <- MS.b/MS.w
+```
+
+### Step 8: p-value
+
+\[ p_{\text{value}} = P(F > F_{\text{stat}}) \]
+
+```{r p_value}
+p.value <- pf( F.stat, df1 = DF.b, df2 = DF.w, lower.tail = FALSE)
+```
+
+## Conclusion
+
+- The ANOVA results show a significant difference between invoice totals across countries.
