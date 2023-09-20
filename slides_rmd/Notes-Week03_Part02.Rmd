@@ -1,0 +1,100 @@
+---
+knit: (function(inputFile, encoding) {
+    rmarkdown::render(inputFile, encoding = encoding, output_dir = "../docs/")
+  })
+institute: "University of Wisconsin-River Falls"
+department: "College of Business and Economics"
+short-author: "Kelly"
+short-date: ''
+short-institute: "UWRF"
+output: 
+  html_document:
+    code_download: true
+    css: style.css
+---
+
+# Case Study: Certainly! Here's a version of your content, formatted in RMarkdown with bullet points, designed as lecture notes:
+
+---
+
+# Test in E-Commerce Data (Checking our assumptions)
+
+In this session, we dive deeper into the Online Retail II data set from the UCI Machine Learning Repository. The core objective? Understand if the quantity of products purchased varies across countries, and then ascertain the validity of our conclusions.
+
+## Steps to follow:
+
+- **Load and Clean Data**
+  - As in our previous discussions, we start by preparing our dataset.
+
+- **Objective**
+  - Use ANOVA to probe: "Is there a significant difference in the quantity of products purchased across different countries?" 
+  - Utilize the `anova()` command and subsequently validate our findings.
+
+### Step 1: Conduct basic ANOVA
+
+*Remember*: It's paramount to begin with exploratory analysis. However, as this session is sequential to our last, we'll rely on our prior findings.
+
+```{r}
+invoice.aov <- aov(InvoiceTotal~Country, data=data_final)
+summary(invoice.aov)
+```
+
+### Step 2: Checking the Homogeneity of Variance Assumption
+
+- **Boxplot for Visualization**:
+  - Illustrate the invoice total by country to get a visual understanding.
+
+```{r}
+data_final %>% ggplot(aes(x=Country,y=InvoiceTotal)) +
+  geom_boxplot() +
+  scale_y_continuous(limits = c(0,2000))
+```
+
+- **Levene test of Homogeneity of Variance**:
+  - Quantify the variance homogeneity across groups.
+
+```{r}
+pacman::p_load("car")
+leveneTest(invoice.aov)
+```
+
+- **Insight**: Both our visual and statistical tests highlight a breach in the Homogeneity of Variance assumption.
+  - Solution? Implement the Welch one-way test.
+
+```{r}
+oneway.test(InvoiceTotal~Country, data=data_final)
+```
+
+### Step 3: Checking the Normality of Residuals
+
+- Residual normality is an ANOVA assumption. We must ensure our model's residuals fit a normal distribution.
+  
+  - **Histogram for Visualization**:
+  
+```{r}
+hist(invoice.aov$residuals)
+```
+
+  - **Q-Q Plot**:
+  
+```{r}
+qqnorm(invoice.aov$residuals)
+qqline(invoice.aov$residuals)  
+```
+
+  - **Shapiro-Wilk Test**:
+
+```{r}
+shapiro.test(sample(invoice.aov$residuals,5000))
+```
+
+- **Insight**: Our tests collectively emphasize non-normality.
+  - Solution? Turn to the Kruskal-Wallis test.
+
+```{r}
+kruskal.test(InvoiceTotal~Country, data=data_final)
+```
+
+## Conclusion:
+Regardless of the tests and their assumptions, our conclusions remain consistent.
+

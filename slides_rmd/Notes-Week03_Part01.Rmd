@@ -13,7 +13,7 @@ output:
     css: style.css
 ---
 
-# Case Study: *Online Retail II data set
+# Case Study: Online Retail II data set
 
 - This study involves the **Online Retail II data set** from the UCI Machine Learning Repository.
 - The dataset contains transactions for a UK-based online retail between 01/12/2009 and 09/12/2011.
@@ -77,13 +77,15 @@ data_clean <- data_clean %>%
 
 - Compute the total transaction amount and prepare the data.
 
-```{r step3}
+```{r}
 data_final <- data_clean %>%
   mutate(TransTotal = Price * Quantity) %>%
   group_by(Invoice) %>%
   mutate(InvoiceTotal = sum(TransTotal)) %>%
   distinct(Invoice, .keep_all = TRUE) %>%
   select(Invoice,InvoiceDate,InvoiceTotal,Country)
+
+save(data_final, file = "../docs/data/online_retail_II.Rdata")
 ```
 
 ## Performing the ANOVA Test Manually
