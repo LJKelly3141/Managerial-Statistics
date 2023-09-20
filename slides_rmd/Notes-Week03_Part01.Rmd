@@ -103,7 +103,7 @@ country.summary <- data_final %>%
 
 - Overall mean:
 
-\[ \bar{Y} = \frac{1}{N} \sum_{i=1}^{N} Y_i \]
+\[\bar{Y} = \frac{1}{N} \sum_{i=1}^{N} Y_i\]
 
 ```{r overall_mean}
 overall_mean <- mean(data_final$InvoiceTotal)
