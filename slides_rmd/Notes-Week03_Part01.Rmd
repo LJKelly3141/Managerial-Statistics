@@ -83,7 +83,11 @@ data_final <- data_clean %>%
   group_by(Invoice) %>%
   mutate(InvoiceTotal = sum(TransTotal)) %>%
   distinct(Invoice, .keep_all = TRUE) %>%
-  select(Invoice,InvoiceDate,InvoiceTotal,Country)
+  select(Invoice,InvoiceDate,InvoiceTotal,Country) %>% 
+  group_by(Country) %>% 
+  mutate(CountryCount = n()) %>% 
+  ungroup() %>% 
+  filter(CountryCount>=50)
 ```
 
 ## Performing the ANOVA Test Manually
@@ -95,8 +99,10 @@ data_final <- data_clean %>%
 country.summary <- data_final %>% 
   group_by(Country) %>% 
   summarise(CountryCount = n(),
-            CountryMean = mean(InvoiceTotal)) %>% 
+            CountryMean = mean(InvoiceTotal),
+            CountrySD = sd(InvoiceTotal)) %>% 
   arrange(desc(CountryCount))
+country.summary
 ```
 
 - Overall mean:
