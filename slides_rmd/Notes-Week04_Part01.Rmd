@@ -203,4 +203,4 @@ ggplot(Housing, aes(x = log(price), y = predicted_prices)) +
 
 - The model's coefficients give insights into the relative importance and effect of different house features on its price.
 - Features like the number of bathrooms, air conditioning, and location in a preferred area have substantial impacts.
-```
+
