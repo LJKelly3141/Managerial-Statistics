@@ -1,0 +1,139 @@
+---
+knit: (function(inputFile, encoding) {
+    rmarkdown::render(inputFile, encoding = encoding, output_dir = "../docs/")
+  })
+institute: "University of Wisconsin-River Falls"
+department: "College of Business and Economics"
+short-author: "Kelly"
+short-date: ''
+short-institute: "UWRF"
+output: 
+  html_document:
+    code_download: true
+    css: style.css
+---
+
+
+# Case Study: Linear Regression Modeling of House Prices in Windsor
+
+In this case study, we will utilize the `Housing` dataset from the `Ecdat` package to model house prices in the City of Windsor using linear regression. The objective is to determine which variables most significantly impact house prices.
+
+## Loading Necessary Libraries and Dataset
+
+- Libraries used:
+    + `tidyverse` for data manipulation and visualization.
+    + `Ecdat` for accessing the `Housing` dataset.
+    + `psych` for generating descriptive statistics.
+    + `jtools` for summarizing linear models.
+
+```{r}
+pacman::p_load(tidyverse, Ecdat, psych, jtools)
+```
+
+## Description of the Data
+
+- The `Housing` dataset contains data about various properties in the City of Windsor, Canada.
+- Each row corresponds to a house.
+- Includes variables such as lot size, number of bedrooms, and price of the house.
+
+```{r}
+data(Housing)
+head(Housing)
+```
+
+## Step 1: Explore the Data
+
+### Summary Statistics
+
+- Use the `describe` function from the `psych` package for an overview.
+
+```{r}
+describe(Housing, skew = FALSE,ranges = FALSE,omit = TRUE)
+```
+
+### Visualizing Relationships
+
+- Scatter plots to visualize relationships between numeric variables and housing price.
+
+```{r}
+Housing %>%
+  pivot_longer(cols = -c(price,!where(is.numeric)), names_to = "variable", values_to = "value") %>% 
+  ggplot(aes(x=value, y=price, color =fullbase)) +
+    geom_point() +
+    facet_wrap(~variable, scales="free") +
+    geom_smooth(method = "lm",se = FALSE) +
+    theme_minimal() +
+    labs(title = "Scatter plots of Numeric Variables vs. Housing Price")
+```
+
+## Step 2: Estimate Initial Model
+
+- Use the `lm` function to estimate a model using all variables to predict the house price.
+
+```{r}
+model_initial <- lm(price ~ .*fullbase, data = Housing)
+summ(model_initial)
+```
+
+## Step 3: Variable Selection
+
+- Use the `step` function to remove all non-significant variables at the 10% significance level.
+
+```{r}
+model_stepwise <- step(model_initial, trace = 0)
+summ(model_stepwise)
+```
+
+## Step 4: Plot Actual vs. Fitted
+
+- Visualize how well the model’s predictions match the actual prices.
+
+```{r}
+predicted_prices <- predict(model_stepwise)
+ggplot(Housing, aes(x = price, y = predicted_prices)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(se = FALSE, color = "black") +
+  geom_abline(slope = 1, intercept = 0, color = "red") +
+  theme_minimal() +
+  labs(title = "Actual vs. Fitted Prices", x = "Actual Price", y = "Fitted Price")
+```
+
+## Step 5: Re-estimate with a Log-Log Model
+
+- A log-linear model is useful when the underlying relationship appears to be nonlinear.
+- Take the natural log of both `price` and `lotsize`.
+
+```{r}
+model_initial_log <- lm(log(price) ~ (. - lotsize + log(lotsize)) * fullbase, data = Housing)
+model_log <- step(model_initial_log, trace = 0)
+summ(model_log)
+```
+
+```{r}
+predicted_prices <- predict(model_log)
+ggplot(Housing, aes(x = log(price), y = predicted_prices)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(se = FALSE, color = "black") +
+  geom_abline(slope = 1, intercept = 0, color = "red") +
+  theme_minimal() +
+  labs(title = "Actual vs. Fitted Prices", x = "Actual Price", y = "Fitted Price")
+```
+
+## Step 6: Interpret the Model
+
+- Interpret coefficients in terms of percentage changes.
+- Examples of interpretation:
+    + For every additional **bedroom**, the house price is expected to increase by approximately 3%.
+    + Each additional **bathroom** is associated with a 20% increase in the house price.
+    + Having a **driveway** boosts the house price by about 11%.
+    + Houses with a **full basement** see a 19% price hike.
+    + **Air conditioning** contributes to a 17% price rise.
+    + Being in a **preferred area** is associated with a 14% price premium.
+    + A 1% increase in **lot size** leads to a 0.29% increase in the house price.
+- Interactions like **bathrms:fullbaseyes** and **fullbaseyes:gashwyes** denote the change in the price percentage due to the combined effect of both features.
+
+### Conclusion
+
+- The model's coefficients give insights into the relative importance and effect of different house features on its price.
+- Features like the number of bathrooms, air conditioning, and location in a preferred area have substantial impacts.
+```
