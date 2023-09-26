@@ -13,7 +13,6 @@ output:
     css: style.css
 ---
 
-
 # Case Study: Linear Regression Modeling of House Prices in Windsor
 
 In this case study, we will utilize the `Housing` dataset from the `Ecdat` package to model house prices in the City of Windsor using linear regression. The objective is to determine which variables most significantly impact house prices.
@@ -75,14 +74,71 @@ model_initial <- lm(price ~ .*fullbase, data = Housing)
 summ(model_initial)
 ```
 
+### Explanation of Regression Output:
+
+- **Coefficients:**
+    + The coefficients represent the change in the dependent variable (house price) for a one-unit change in the predictor variable, while holding other predictors in the model constant.
+    + For example, if the coefficient for bedrooms is 2000, it suggests that adding another bedroom increases the house price by $2000, assuming all other factors remain constant.
+
+- **Standard Error:**
+    + The standard error measures the accuracy of the coefficient by estimating the variation of the coefficient if the same test were run on a different sample of our population.
+    + A smaller standard error indicates a more accurate estimate.
+
+- **t value:**
+    + The t value is the coefficient divided by its standard error.
+    + It tests the null hypothesis that the coefficient is equal to zero (no effect). A large t value indicates that the null hypothesis can be rejected.
+
+- **p-value:**
+    + The p-value represents the probability that the coefficient is actually zero.
+    + A low p-value (<0.05) indicates that you can reject the null hypothesis and that the observed relationship is statistically significant.
+
+- **R-squared:**
+    + R-squared measures the proportion of the variance in the dependent variable that is predictable from the independent variables.
+    + R-squared values range from 0 to 1, where a higher value generally indicates a better fit of the model, assuming certain conditions are met.
+
+- **F-statistic:**
+    + The F-statistic tests whether at least one of the predictors’ coefficients is not equal to zero, i.e., it tests the overall significance of the model.
+    + A larger F-statistic indicates a more significant model.
+
+- **Residuals:**
+    + The residuals represent the difference between the observed value and the value predicted by the model.
+    + Analyzing the residuals can help in understanding the appropriateness of the model.
+
+This initial regression output will guide us in refining the model, selecting significant variables, and improving the model fit in the subsequent steps.
+
 ## Step 3: Variable Selection
 
-- Use the `step` function to remove all non-significant variables at the 10% significance level.
+- The `step` function is employed for stepwise regression, automatically selecting predictive variables.
+- It adds or removes predictors to meet the specified criteria, primarily AIC, for model comparison.
 
 ```{r}
 model_stepwise <- step(model_initial, trace = 0)
 summ(model_stepwise)
 ```
+
+### Explanation of the Step Function:
+
+- **Objective:** 
+    + The `step` function aims to identify a suitable subset of predictors that contribute to explaining the variability in the dependent variable.
+    + It helps in eliminating variables that do not significantly contribute to the model, thus refining and simplifying the model.
+
+- **Working Principle:**
+    + The function works iteratively, either adding or removing predictors, based on the specified criterion (usually AIC) to find the best-fitted model.
+    + In each iteration, it evaluates the impact of adding or removing each variable, selecting the model that best improves the fit.
+
+- **AIC (Akaike Information Criterion):**
+    + AIC is a measure used by the `step` function to compare different models.
+    + It considers the goodness of fit and the simplicity of the model (i.e., the number of parameters used).
+    + Lower AIC values indicate better-fitting models.
+
+- **Significance Level:**
+    + The `step` function checks the significance of each variable's contribution to the model.
+    + Variables not meeting the significance threshold (usually a p-value < 0.05 or 0.10) are candidates for removal from the model.
+
+- **Output:**
+    + The final output is a refined model with a subset of predictors that collectively contribute significantly to explaining the variability in the dependent variable.
+
+This step helps in refining the initial model by keeping only those variables that are statistically significant, thereby improving the model's performance and reducing the risk of overfitting.
 
 ## Step 4: Plot Actual vs. Fitted
 
@@ -108,6 +164,17 @@ model_initial_log <- lm(log(price) ~ (. - lotsize + log(lotsize)) * fullbase, da
 model_log <- step(model_initial_log, trace = 0)
 summ(model_log)
 ```
+
+To explain the interpretation of regression coefficients, let's consider the following four models:
+
+| Model Type      | Equation                           | Interpretation of $\beta_1$                                                  |
+|-----------------|------------------------------------|-------------------------------------------------------------------------------|
+| Linear          | $y = \beta_0 + \beta_1x_1 + \epsilon$ | A 1-unit increase in $x_1$ is associated with a $\beta_1$ unit change in $y$. |
+| Log-Linear      | $\log(y) = \beta_0 + \beta_1x_1 + \epsilon$ | A 1-unit increase in $x_1$ is associated with a $100 \times \beta_1$ percent change in $y$. |
+| Linear-Log      | $y = \beta_0 + \beta_1\log(x_1) + \epsilon$ | A 1% increase in $x_1$ is associated with a $\frac{\beta_1}{100}$ unit change in $y$. |
+| Log-Log         | $\log(y) = \beta_0 + \beta_1\log(x_1) + \epsilon$ | A 1% increase in $x_1$ is associated with a $\beta_1$ percent change in $y$. |
+
+This table should guide the interpretation of the regression coefficients across different model specifications.
 
 ```{r}
 predicted_prices <- predict(model_log)
