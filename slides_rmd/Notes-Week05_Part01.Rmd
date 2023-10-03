@@ -1,0 +1,146 @@
+---
+knit: (function(inputFile, encoding) {
+    rmarkdown::render(inputFile, encoding = encoding, output_dir = "../docs/")
+  })
+institute: "University of Wisconsin-River Falls"
+department: "College of Business and Economics"
+short-author: "Kelly"
+short-date: ''
+short-institute: "UWRF"
+output: 
+  html_document:
+    code_download: true
+    css: style.css
+---
+
+# Case Study: Wine Quality
+
+- **Dataset**: [Wine Data](https://ljkelly3141.github.io/ABE-Book/data/winequality-red.csv)
+- **Source**: Cortez, Paulo, Cerdeira, A., Almeida, F., Matos, T., and Reis, J.. (2009).[^50-linear_wine-1]
+  
+[^50-linear_wine-1]: Cortez et al. (2009). UCI Machine Learning Repository. https://doi.org/10.24432/C56S3T.
+
+## Case Background
+- Goal: Understand factors contributing to wine quality.
+- Dataset: Contains physicochemical attributes and quality ratings.
+  
+## Description of the Data
+- Data is about red wine samples from North Portugal.
+- Variables include:
+
+| Variable             | Description                                               |
+|----------------------|-----------------------------------------------------------|
+| fixed acidity        | Most acids involved with wine or fixed or nonvolatile. |
+| volatile acidity     | Amount of acetic acid in wine. |
+| citric acid          | Adds freshness and flavor to wines. |
+| residual sugar       | Amount of sugar post fermentation. |
+| chlorides            | Amount of salt in the wine. |
+| free sulfur dioxide  | Prevents microbial growth and oxidation of wine. |
+| total sulfur dioxide | Overall SO2, felt in nose and taste. |
+| density              | Correlates with alcohol percentage and sugar content. |
+| pH                   | Measures wine's acidity on a scale from 0-14. |
+| sulphates            | Wine additive affecting SO2 levels. |
+| alcohol              | Alcohol content of the wine. |
+| quality              | Score between 0 and 10 by experts. | 
+
+## Step 1: Load and Explore Data
+- **Loading Libraries**
+
+   - `psych`: For psychometric theory and data analysis.
+   - `jtools`: Functions for regression and plotting.
+   - `tidyverse`: Collection of R packages for data manipulation and visualization.
+
+  
+  ```{r}
+  pacman::p_load(psych, jtools, tidyverse)
+  ```
+
+- **Loading the Dataset**
+
+  ```{r}
+  wine_data <- 
+    read.csv("https://ljkelly3141.github.io/ABE-Book/data/winequality-red.csv", 
+      header=TRUE, 
+      sep=";")
+  ```
+
+- **Standardizing the Dataset**
+
+  ```{r}
+  wine_data[,names(wine_data) != "quality"] <- standardize(wine_data[,names(wine_data) != "quality"])
+  ```
+
+- **Visualizing Data**
+  
+  ```{r, fig.height=10}
+  wine_data %>%
+    pivot_longer(cols = -quality, names_to = "Variable", values_to = "Attributes") %>%
+    ggplot(aes(y=quality, x=Attributes)) +
+    geom_point() +
+    geom_smooth(se=FALSE) +
+    facet_wrap(~Variable, ncol = 3)
+  ```
+
+## Step 2: Linear Regression Model
+
+  ```{r}
+  wine.quality_all <- lm(quality ~ ., data = wine_data)
+  summ(wine.quality_all)
+  ```
+
+## Step 3: Model Refinement
+- Iteratively remove irrelevant variables using the `step` function.
+  
+  ```{r}
+  wine.quality_final <- step(wine.quality_all, trace=0)
+  summ(wine.quality_final)
+  ```
+
+## Step 4: Assessing Model for Nonlinearity
+- **Loading Packages**
+
+  ```{r}
+  pacman::p_load(tidyverse)
+  ```
+
+- **Creating a Data Frame for Plotting** 
+  
+  ```{r}
+  res.fit_data <- data.frame(check.names = FALSE, 
+                             'Residuals' = wine.quality_final$residuals, 
+                             'Fitted Values' = wine.quality_final$fitted.values)
+  ```
+
+- **Creating the Scatter Plot**
+
+  ```{r}
+  res.fit_data %>% 
+    ggplot(aes(y=`Residuals`, x=`Fitted Values`)) + 
+    geom_point() + geom_smooth(se=FALSE) + 
+    geom_abline(intercept = 0, slope = 0)
+  ```
+
+## Step 5: Test Normality of Residuals
+
+  ```{r}
+  hist(wine.quality_final$residuals)
+  ```
+
+## Step 6: Test for Heteroscedasticity
+- Using the `bptest` function.
+
+  ```{r}
+  pacman::p_load(lmtest)
+  bptest(wine.quality_final)
+  summ(wine.quality_final, digits=4, robust=TRUE)
+  ```
+
+## Step 7: Interpretation of the Model
+- Linear regression model derived from dataset with 1,599 observations.
+- Model utilized the Ordinary Least Squares (OLS) method.
+- Variable coefficients and their implications:
+  - Intercept: 5.6360
+  - `volatile.acidity`: -0.1813
+  - `chlorides`: -0.0950
+  - `alcohol`: 0.3083
+  
