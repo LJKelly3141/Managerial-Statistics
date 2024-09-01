@@ -1,0 +1,98 @@
+```{r data generation, echo = FALSE, results = "hide"}
+
+U = sample(c(TRUE,FALSE),1)
+N = c(4,6)
+Q =  sample(1:2,1)
+sig.level = sample(c(.05,.10),1)
+
+sim.data <- function(n, uniform = T){
+   if(uniform){ 
+    sample(10:100,1) %>% 
+    rep(n) +
+    sample(-10:20,n,replace = F) %>% 
+    return()
+   } else {
+    sample(30:70,n) %>% 
+    return()  
+   }
+}
+
+D = list('cards' = c("Hearts", "Diamonds", "Spades", "Clubs"),
+         'dice' = paste(1:6))
+q.data <- data.frame(
+  'Day' = D[[Q]],
+  'Frequency' = sim.data(n = N[Q],uniform = U)
+)
+observed = q.data$Frequency
+
+q.text <- list(
+'cards' = 
+  paste0("You want to see if a card dealer is favoring one suit over another. You observe the dealer pick a card, put it back in the deck, shuffle, and then repeat the process ", 
+fmt(sum(observed), 0),
+" times. The results are displayed in the table below."),
+
+'dise' = 
+  paste0("A die is rolled ",
+fmt(sum(observed), 0),
+" times to see if it is fair. The table below shows the outcomes.")
+)
+
+test.out <- chisq.test(observed)
+test.reject <- test.out$p.value <= sig.level
+
+if(test.reject){
+  q.ans <- c(0,0,1,0)
+  q.solution <- q.ans == 1
+} else{
+  q.ans <- c(0,1,0,0)
+  q.solution <- q.ans == 1
+}
+
+```
+
+
+Question
+========
+
+`r q.text[[Q]]`
+
+`r kable(q.data)`
+
+Use the following output to evaluate weather the above random process is fair at the `r sig.level` level of significance.
+
+```{r, echo=FALSE}
+test.out
+```
+
+**Hints:**
+
+[Link to Text Book](https://stats.libretexts.org/Bookshelves/Applied_Statistics/Book%3A_Learning_Statistics_with_R_-_A_tutorial_for_Psychology_Students_and_other_Beginners_(Navarro)/12%3A_Categorical_Data_Analysis/12.01%3A_The_2_Goodness-of-fit_Test?contentOnly "LSR - 12.1: The χ2 Goodness-of-fit Test"){target="blank"}
+
+Answerlist
+----------
+* Reject the null hypothesis, there is not sufficient evidence to conclude that the process is unfair
+* Fail to reject the null hypothesis, there is not sufficient evidence to conclude that the process is unfair
+* Reject the null hypothesis, there is sufficient evidence to conclude that the process is unfair
+* Fail to reject the null hypothesis, there is sufficient evidence to conclude that the process is unfair
+
+
+
+
+
+Solution
+========
+
+```{r solutionlist, echo = FALSE, results = "asis"}
+answerlist(ifelse(q.solution, "True", "False"), markup = "markdown")
+```
+
+
+
+
+Meta-information
+================
+extype: schoice
+exsolution: `r mchoice2string(q.solution, single = TRUE)`
+exname: chi2uniform2
+
+

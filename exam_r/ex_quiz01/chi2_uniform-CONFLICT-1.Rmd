@@ -1,0 +1,55 @@
+```{r data generation, echo = FALSE, results = "hide"}
+
+(U = sample(c(TRUE,FALSE),1))
+N = 7
+
+sim.data <- function(n, uniform = T){
+   if(uniform){ 
+    sample(10:100,1) %>% 
+    rep(n) +
+    sample(-10:20,n,replace = F) %>% 
+    return()
+   } else {
+    sample(30:70,n) %>% 
+    return()  
+   }
+}
+
+q.data <- data.frame(
+  'Day' = c("Sunday",	"Monday",	"Tuesday",	"Wednesday",	"Thursday",	"Friday",	"Saturday"),
+  'Frequency' = sim.data(n = 7,uniform = U)
+)
+
+q.ans <- list(
+'observed' = q.data$Frequency,
+'expected' = rep(sum(observed)/N, N),
+'chi2stat' = sum( (observed - expected)^2 / expected ),
+'deg.free' = N - 1,
+'p.value' = pchisq(q=chi2stat,df=deg.free,lower.tail = FALSE),
+)
+
+```
+
+
+Question
+========
+
+A call center receives calls seven days per week. The following is day of the week for a random sample of phone calls.
+
+`r fmt(abs(q.data), 3)`
+
+
+
+Solution
+========
+
+The absolute value of the t-test statistic is thus equal to
+`r fmt(abs(chi2stat), 3)`.
+
+Meta-information
+================
+extype: num
+exsolution: `r fmt(abs(chi2stat), 3)`
+exname: chi2uniform
+extol: 0.01
+
