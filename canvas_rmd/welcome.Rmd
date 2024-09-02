@@ -16,51 +16,48 @@ short-institute: "UWRF"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Welcome to class!
+## Welcome to Class!
 
-Welcome to Managerial Statistics. I am looking forward to learning statistics with you. This is the TLDR for the class. Here I will set out some of the expectations for the class and a few class policies. You should also read the class syllabus, see the next page.
+Welcome to Managerial Statistics. I am looking forward to learning statistics with you. This is the TL;DR for the class, where I'll outline some of the key expectations and policies. Please make sure to also read the class syllabus, which you'll find on the next page.
 
-## Key points about this class:
+## Key Points About This Class:
 
--   This course is scheduled for session A of Fall 2023. It will run from 09/06/2023 - 10/24/2023. **All work must be completed by 10/24/2023.**
--   Lecture videos will be published each week of the class.
--   I will meet with you for one-on-one help sessions via zoom. To schedule an appointment with me, use this link: <a href="http://tiny.cc/DrKelly" target="_blank">http://tiny.cc/DrKelly</a>
--   Synchronous class meetings will be held via Zoom at <http://tiny.cc/ECON730-LEC>
+- **Course Schedule:** This course is scheduled for session A of Fall 2024, running from September 3, 2024, to October 21, 2024. **All work must be completed by Friday, October 25, 2024.**
+- **Lecture Videos:** Weekly lecture videos will be published throughout the class.
+- **One-on-One Help:** I will be available for one-on-one help sessions via Zoom. To schedule an appointment with me, use this link: <a href="http://tiny.cc/DrKelly" target="_blank">http://tiny.cc/DrKelly</a>.
 
+## Before Class You Should Do the Following:
 
-## Before class you should do the following:
-
--   Ensure you have the latest release of Zoom on your computer.
--   Test your audio and video setup by running a [Zoom meeting test](https://zoom.us/test){target="_blank"}.
--   Register for a free R Studio Cloud account. Register here: [https://rstudio.cloud/plans/free](https://rstudio.cloud/plans/free){target="_blank"}.
--   Read all the emails I send you!
--   Join the RStudio.Cloud class workspace using this link: [RStudio.Cloud Workspace](http://tiny.cc/ECON730-WORKSPACE "ECON730-WORKSPACE"){target="_blank"}.
--   You should also review the meaterials in modeles " Week 1 Part 1. Intro to R, RStudio and Posit.Cloud" and "Week 1 Part 2. Intro to R, RStudio and Posit.Cloud"
-
+- Ensure you have the latest release of Zoom on your computer.
+- Test your audio and video setup by running a [Zoom meeting test](https://zoom.us/test){target="_blank"}.
+- Register for a free Posit.Cloud account. Register here: [https://posit.cloud/plans/free](https://posit.cloud/plans/free){target="_blank"}.
+- Read all the emails I send you!
+- Join the Posit.Cloud class workspace using this link: [Posit.Cloud Workspace](http://tiny.cc/ECON730-WORKSPACE "ECON730-WORKSPACE"){target="_blank"}.
+- Join the assignment work group using this link: [Assignment Work Group](http://tiny.cc/ECON730-ASSIGNMENT).
 
 ## Technology Requirements
 
-You will need the following to complete this class.
+You will need the following to complete this class:
 
--   Computer with internet access. A tablet or Chromebook may not be sufficient to complete all class activities.
--   Reliable broadband internet service.
--   Microphone and web camera
+- A computer with internet access. A tablet or Chromebook may not be sufficient to complete all class activities.
+- Reliable broadband internet service.
+- A microphone and web camera.
 
 If you need help getting set up for classes, please let me know.
 
 ## Announcements and Communication
 
-The main mode of communication for this class will be through MS Teams. Please use MS Teams to contact me. You can send a message to me privately through MS Teams chat tool (Here is a link <a href="https://support.microsoft.com/en-us/office/start-and-pin-chats-a864b052-5e4b-4ccf-b046-2e26f40e21b5" target="_blank">all about chat.</a>) I recommend installing MS Teams on your computer and mobile device.
+The main mode of communication for this class will be through MS Teams. Please use MS Teams to contact me. You can send a message to me privately through the MS Teams chat tool (Here is a link <a href="https://support.microsoft.com/en-us/office/start-and-pin-chats-a864b052-5e4b-4ccf-b046-2e26f40e21b5" target="_blank">all about chat</a>). I recommend installing MS Teams on your computer and mobile device.
 
-Here is a link to send me a message on teams: <http://tiny.cc/DrKelly-Chat>
+Here is a link to send me a message on Teams: <http://tiny.cc/DrKelly-Chat>.
 
 ## Instructor Contact Information
 
-While this is a web-based course, I am easily accessible. Please try to use MS Teams to contact me, but if needed, here is my email, and phone:
+While this is a web-based course, I am easily accessible. Please try to use MS Teams to contact me, but if needed, here is my email and phone:
 
--   Email: <a href="mailto:logan.kelly@uwrf.edu">logan.kelly\@uwrf.edu</a>
--   MS Teams: <http://tiny.cc/DrKelly-Chat>
--   Phone: (715) 425-4993
--   Mobile: (401) 256-0986
+- **Email:** <a href="mailto:logan.kelly@uwrf.edu">logan.kelly\@uwrf.edu</a>
+- **MS Teams:** <http://tiny.cc/DrKelly-Chat>
+- **Phone:** (715) 425-4993
+- **Mobile:** (401) 256-0986
 
-To schedule an appointment with me, use this link: <a href="http://tiny.cc/DrKelly" target="_blank">http://tiny.cc/DrKelly</a>
+To schedule an appointment with me, use this link: <a href="http://tiny.cc/DrKelly" target="_blank">http://tiny.cc/DrKelly</a>.
