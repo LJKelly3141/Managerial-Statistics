@@ -5,7 +5,7 @@ knit: (function(inputFile, encoding) {
     rmarkdown::render(inputFile, encoding = encoding, output_dir = "../docs/")
   })
 output:
-  pdf_document: default
+  #pdf_document: default
   html_document:
     css: style.css
 institute: "University of Wisconsin-River Falls"
@@ -97,8 +97,7 @@ Generative AI tools, such as ChatGPT, are permissible for helping you complete t
 
 # Major Assignments and Examinations
 
-- **Homework Case Studies:** These will be assigned weekly and must be completed by the specified due dates. The assignments will require the use of statistical software to analyze data and provide a detailed analysis of the results. These case studies will make up 100% of your grade.
-- **Final Presentation:** You will be required to present one of your case studies at the end of the semester. The presentation will be recorded and evaluated as part of your final grade.
+**Homework Case Studies:** These will be assigned weekly and must be completed by the specified due dates. The assignments will require the use of statistical software to analyze data and provide a detailed analysis of the results. These case studies will make up 100% of your grade.
 
 # Attendance and Participation Policy
 
