@@ -1,18 +1,17 @@
 ---
 title: "Managerial Statistics"
 author: "Dr. Logan J. Kelly"
-knit: (function(inputFile, encoding) {
-    rmarkdown::render(inputFile, encoding = encoding, output_dir = "../docs/")
-  })
-output:
-  pdf_document: default
-  html_document:
+format: 
+  html:
     css: style.css
-institute: "University of Wisconsin-River Falls"
+  pdf: default
+execute:
+  output-dir: ../docs
+affiliation: "University of Wisconsin-River Falls"
 department: "College of Business and Economics"
 short-author: "Kelly"
 short-date: ''
-short-institute: "UWRF"
+short-affiliation: "UWRF"
 ---
 
 ```{r setup, include=FALSE}
