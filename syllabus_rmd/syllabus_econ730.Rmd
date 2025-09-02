@@ -5,7 +5,7 @@ knit: (function(inputFile, encoding) {
     rmarkdown::render(inputFile, encoding = encoding, output_dir = "../docs/")
   })
 output:
-  #pdf_document: default
+  pdf_document: default
   html_document:
     css: style.css
 institute: "University of Wisconsin-River Falls"
@@ -38,7 +38,7 @@ knitr::opts_chunk$set(echo = TRUE)
 - **Course Title:** Managerial Statistics
 - **Subject Code:** ECON
 - **Course Number:** 730
-- **Section Number:** 01
+- **Section Number:** 90
 - **Credits:** 3
 - **Prerequisites:** Admission to the MBA program
 - **Mode of Instruction:** Online
